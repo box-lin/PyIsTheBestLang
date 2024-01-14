@@ -9,6 +9,10 @@ class DigitalDP:
     def count_bin(n):
         # calculate the number of occurrences of positive integer binary bit 1 from 1 to n
 
+        """
+        is_limit = True if current x is limited 
+        is_num = False if previous filled with 0 as prefix 
+        """
         @lru_cache(None)
         def dfs(i, is_limit, is_num, cnt):
             if i == m:
