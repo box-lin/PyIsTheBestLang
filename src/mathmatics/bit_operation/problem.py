@@ -24,7 +24,9 @@ Property：(4*i)^(4*i+1)^(4*i+2)^(4*i+3)=0  (2*n)^(2*n+1)=1 (a&b)^(a&c) = a&(b^c
 2275（https://leetcode.cn/problems/largest-combination-with-bitwise-and-greater-than-zero/）range_add|classical|st
 2527（https://leetcode.cn/problems/find-xor-beauty-of-array/description/）brute_force|brain_teaser|bit_operation
 2680（https://leetcode.cn/problems/maximum-or/description/）greedy|brute_force|prefix_suffix
-100087（https://leetcode.cn/problems/apply-operations-on-array-to-maximize-sum-of-squares/description/）bit_wise|bit_operation|greedy
+100087（https://leetcode.cn/problems/apply-operations-on-array-to-maximize-sum-of-squares/）bit_wise|bit_operation|greedy
+100160（https://leetcode.cn/problems/maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k/）bit_operation|binary_search|bit_operation|binary_search|digital_dp
+100179（https://leetcode.com/problems/minimize-or-of-remaining-elements-using-operations/）bit_operation|greedy|brain_teaser
 
 =====================================LuoGu======================================
 P5657（https://www.luogu.com.cn/problem/P5657）bit_operation
@@ -55,15 +57,24 @@ P8965（https://www.luogu.com.cn/problem/P8965）tree_dp|xor
 1879D（https://codeforces.com/contest/1879/problem/D）bit_operation|bit_contribution_method|prefix_sum|counter|prefix_or
 1368D（https://codeforces.com/problemset/problem/1368/D）implemention|greedy|bit_wise|bit_operation
 1802C（https://codeforces.com/contest/1802/problem/C）construction|xor_property
+1918C（https://codeforces.com/contest/1918/problem/C）greedy|bit_operation
+1669H（https://codeforces.com/contest/1669/problem/H）bit_operation
+1760G（https://codeforces.com/contest/1760/problem/G）bit_operation|dfs|brute_force
+1066E（https://codeforces.com/contest/1066/problem/E）bit_operation|brute_force|implemention|prefix_sum
 
 ====================================AtCoder=====================================
 ABC117D（https://atcoder.jp/contests/abc117/tasks/abc117_d）bit_operation|greedy|brain_teaser
 ABC147D（https://atcoder.jp/contests/abc147/tasks/abc147_d）classical|xor_sum
 ABC121D（https://atcoder.jp/contests/abc121/tasks/abc121_d）classical|xor_sum
+ABC308G（https://atcoder.jp/contests/abc308/tasks/abc308_g）minimum_pair_xor|dynamic
+
+
 =====================================AcWing=====================================
 998（https://www.acwing.com/problem/content/1000/）or|xor|and|bit_operation|greedy
 4614（https://www.acwing.com/problem/content/4617/）bit_operation|brute_force|prefix_sum|preprocess
 
+=====================================Library=====================================
+1（https://ac.nowcoder.com/acm/contest/53485/F）minimum_pair_xor|dynamic|classical
 
 https://blog.csdn.net/qq_35473473/article/details/106320878
 """
@@ -73,7 +84,8 @@ from functools import reduce
 from operator import xor, or_
 from typing import List
 
-from src.mathmatics.bit_operation.template import BitOperation
+from src.basis.binary_search.template import BinarySearch
+from src.mathmatics.bit_operation.template import BitOperation, MinimumPairXor
 from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
@@ -680,3 +692,104 @@ class Solution:
 
             ac.st(res[int("0b" + t, 2)][k])
         return
+
+    @staticmethod
+    def lc_100160(k: int, x: int) -> int:
+
+        """
+        url: https://leetcode.cn/problems/maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k/description/
+        tag: bit_operation|binary_search|digital_dp
+        """
+
+        def check(num):
+            num += 1
+            cnt = 0
+            for i in range(x, 64, x):
+                n = 1 << (i - 1)
+                if n > num:
+                    break
+                cnt += (num // (n << 1)) * n
+                if num % (n << 1) > n:
+                    cnt += (num % (n << 1)) - n
+            return cnt <= k
+
+        ans = BinarySearch().find_int_right(0, 10 ** 15, check)
+        return ans
+
+    @staticmethod
+    def abc_308g(ac=FastIO()):
+        """
+        url: https://atcoder.jp/contests/abc308/tasks/abc308_g
+        tag: minimum_pair_xor|dynamic|classical
+        """
+        q = ac.read_int()
+        minimum_xor = MinimumPairXor()
+        for _ in range(q):
+            lst = ac.read_list_ints()
+
+            if lst[0] == 1:
+                minimum_xor.add(lst[1])
+            elif lst[0] == 2:
+                minimum_xor.remove(lst[1])
+            else:
+                ac.st(minimum_xor.query())
+        return
+
+    @staticmethod
+    def library_check_1(ac=FastIO()):
+        """
+        url: https://ac.nowcoder.com/acm/contest/53485/F
+        tag: minimum_pair_xor|dynamic|classical
+        """
+        q = ac.read_int()
+        minimum_xor = MinimumPairXor()
+        for _ in range(q):
+            lst = ac.read_list_strs()
+
+            if lst[0] == "ADD":
+                minimum_xor.add(int(lst[1]))
+            elif lst[0] == "DEL":
+                minimum_xor.remove(int(lst[1]))
+            else:
+                ac.st(minimum_xor.query())
+        return
+
+    @staticmethod
+    def lc_100179(nums: List[int], k: int) -> int:
+        """
+        url: https://leetcode.com/problems/minimize-or-of-remaining-elements-using-operations/
+        tag: bit_operation|greedy|brain_teaser
+        """
+        ans = mask = 0
+        for i in range(max(nums).bit_length(), -1, -1):
+            mask |= 1 << i
+            pre = -1
+            cnt = 0
+            for num in nums:
+                pre &= num & mask
+                if pre == 0:
+                    pre = -1
+                else:
+                    cnt += 1
+            if cnt > k:
+                ans |= 1 << i
+                mask ^= 1 << i
+        return ans
+
+    @staticmethod
+    def cf_1918c(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1918/problem/C
+        tag: bit_operation|greedy
+        """
+        for _ in range(ac.read_int()):
+            a, b, r = ac.read_list_ints()
+            for i in range((a ^ b).bit_length() - 2, -1, -1):
+                bit = 1 << i
+                if (a ^ b) & bit and bit <= r and abs((a ^ bit) - (b ^ bit)) < abs(a - b):
+                    a ^= bit
+                    b ^= bit
+                    r -= bit
+            ac.st(abs(a - b))
+        return
+

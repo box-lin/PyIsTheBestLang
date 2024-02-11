@@ -19,7 +19,6 @@ from operator import mul
 from typing import List, Callable, Dict, Set, Tuple, DefaultDict
 from heapq import heappush, heappop, heapify
 
-
 inf = 1 << 32
 
 
@@ -41,10 +40,6 @@ class FastIO:
         return list(map(int, stdin.readline().rstrip().split()))
 
     @staticmethod
-    def read_list_floats():
-        return list(map(float, stdin.readline().rstrip().split()))
-
-    @staticmethod
     def read_list_ints_minus_one():
         return list(map(lambda x: int(x) - 1, stdin.readline().rstrip().split()))
 
@@ -62,32 +57,12 @@ class FastIO:
         return
 
     @staticmethod
-    def read_list_str():
-        return list(stdin.readline().rstrip())
-
-    def read_graph(self, n, directed=False):
-        dct = [[] for _ in range(n)]
-        for _ in range(n - 1):
-            i, j = self.read_list_ints_minus_one()
-            dct[i].append(j)
-            if not directed:
-                dct[j].append(i)
-        return dct
+    def st(x, flush=False):
+        return print(x, flush=flush)
 
     @staticmethod
-    def st(x):
-        return print(x)
-
-    @staticmethod
-    def lst(x):
-        return print(*x)
-
-    @staticmethod
-    def round_5(f):
-        res = int(f)
-        if f - res >= 0.5:
-            res += 1
-        return res
+    def lst(x, flush=False):
+        return print(*x, flush=flush)
 
     @staticmethod
     def max(a, b):
@@ -101,9 +76,6 @@ class FastIO:
     def ceil(a, b):
         return a // b + int(a % b != 0)
 
-    def hash_num(self, x):
-        return x ^ self.random_seed
-
     @staticmethod
     def accumulate(nums):
         n = len(nums)
@@ -112,37 +84,6 @@ class FastIO:
             pre[i + 1] = pre[i] + nums[i]
         return pre
 
-    def inter_ask(self, lst):
-        self.lst(lst)
-        stdout.flush()  # which is necessary
-        res = self.read_int()
-        return res
-
-    def inter_out(self, lst):
-        self.lst(lst)
-        stdout.flush()   # which is necessary
-        return
-
-    @staticmethod
-    def bootstrap(f, queue=[]):
-        def wrappedfunc(*args, **kwargs):
-            if queue:
-                return f(*args, **kwargs)
-            else:
-                to = f(*args, **kwargs)
-                while True:
-                    if isinstance(to, GeneratorType):
-                        queue.append(to)
-                        to = next(to)
-                    else:
-                        queue.pop()
-                        if not queue:
-                            break
-                        to = queue[-1].send(to)
-                return to
-
-        return wrappedfunc
-
 
 class Solution:
     def __init__(self):
@@ -150,7 +91,10 @@ class Solution:
 
     @staticmethod
     def main(ac=FastIO()):
-
+        """
+        url: https://codeforces.com/problemset/problem/1208/D
+        tag: segment_tree|reverse_thinking|construction|point_set|range_sum_bisect_left
+        """
         for _ in range(ac.read_int()):
             pass
         return

@@ -10,16 +10,18 @@ Description：lexicographical_order|counter|high_to_low|low_to_high
 902（https://leetcode.cn/problems/numbers-at-most-n-given-digit-set/）counter|digital_dp
 1012（https://leetcode.cn/problems/numbers-with-repeated-digits/）inclusion_exclusion|counter|digital_dp
 1067（https://leetcode.cn/problems/digit-count-in-range/）counter|digital_dp|inclusion_exclusion
-1397（https://leetcode.cn/problems/find-all-good-strings/）digital_dp|implemention
+1397（https://leetcode.cn/problems/find-all-good-strings/）digital_dp|implemention|kmp
 2376（https://leetcode.cn/problems/count-special-integers/）counter|digital_dp
 2719（https://leetcode.cn/problems/count-of-integers/）digital_dp|inclusion_exclusion
 2801（https://leetcode.cn/problems/count-stepping-numbers-in-range/）digital_dp|inclusion_exclusion
 2827（https://leetcode.cn/problems/number-of-beautiful-integers-in-the-range/）digital_dp|inclusion_exclusion
 17（https://leetcode.cn/problems/number-of-2s-in-range-lcci/）counter|digital_dp
+100160（https://leetcode.cn/problems/maximum-number-that-sum-of-the-prices-is-less-than-or-equal-to-k/）bit_operation|binary_search|bit_operation|binary_search|digital_dp
 
 ====================================AtCoder=====================================
 ABC121D（https://atcoder.jp/contests/abc121/tasks/abc121_d）xor_property|digital_dp
 ABC208E（https://atcoder.jp/contests/abc208/tasks/abc208_e）brain_teaser|digital_dp
+ABC336E（https://atcoder.jp/contests/abc336/tasks/abc336_e）brut_force|digital_dp
 
 =====================================LuoGu======================================
 P1590（https://www.luogu.com.cn/problem/P1590）counter|digital_dp
@@ -47,6 +49,7 @@ class Solution:
         url: https://atcoder.jp/contests/abc121/tasks/abc121_d
         tag: xor_property|digital_dp
         """
+
         #  n^(n+1) == 1 (n%2==0)
         def count(num):
             @lru_cache(None)
@@ -88,6 +91,7 @@ class Solution:
         url: https://atcoder.jp/contests/abc208/tasks/abc208_e
         tag: brain_teaser|digital_dp
         """
+
         @lru_cache(None)
         def dfs(i, is_limit, is_num, pre):
             if i == m:
@@ -117,9 +121,7 @@ class Solution:
         url: https://leetcode.cn/problems/number-of-digit-one/
         tag: counter|digital_dp
         """
-        if not n:
-            return 0
-        return DigitalDP().count_digit(n, 1)
+        return DigitalDP().count_digit_dp(n, 1)
 
     @staticmethod
     def lc_2719(num1: str, num2: str, min_sum: int, max_sum: int) -> int:
@@ -127,35 +129,36 @@ class Solution:
         url: https://leetcode.cn/problems/count-of-integers/
         tag: digital_dp|inclusion_exclusion
         """
-        def check(num):
-            @lru_cache(None)
-            def dfs(i, cnt, is_limit, is_num):
-                if i == n:
-                    if is_num:
-                        return 1 if min_sum <= cnt <= max_sum else 0
-                    return 0
 
+        def check(n):
+            # calculate the number of occurrences of positive integer binary bit 1 from 1 to n
+
+            @lru_cache(None)
+            def dfs(i, is_limit, is_num, cnt):
+                if i == m:
+                    return 1 if (min_sum <= cnt <= max_sum and is_num) else 0
+                if cnt + 9 * (m - i) < min_sum:
+                    return 0
+                if cnt > max_sum:
+                    return 0
                 res = 0
                 if not is_num:
-                    res += dfs(i + 1, 0, False, False)
-                floor = 0 if is_num else 1
-                ceil = int(s[i]) if is_limit else 9
-                for x in range(floor, ceil + 1):
+                    res += dfs(i + 1, False, False, 0)
+                low = 0 if is_num else 1
+                high = int(st[i]) if is_limit else 9
+                for x in range(low, high + 1):
                     if cnt + x <= max_sum:
-                        res += dfs(i + 1, cnt + x, is_limit and ceil == x, True)
-                    res %= mod
-                return res
+                        res += dfs(i + 1, is_limit and high == x, True, cnt + x)
+                return res % mod
 
-            s = str(num)
-            n = len(s)
-            ans = dfs(0, 0, True, False)
+            st = str(n)
+            m = len(st)
+            ans = dfs(0, True, False, 0)
             dfs.cache_clear()
             return ans
 
         mod = 10 ** 9 + 7
-        num2 = int(num2)
-        num1 = int(num1)
-        return (check(num2) - check(num1 - 1)) % mod
+        return (check(int(num2)) - check(int(num1) - 1)) % mod
 
     @staticmethod
     def lc_2801(low: str, high: str) -> int:
@@ -163,6 +166,7 @@ class Solution:
         url: https://leetcode.cn/problems/count-stepping-numbers-in-range/
         tag: digital_dp|inclusion_exclusion
         """
+
         def check(num):
             @lru_cache(None)
             def dfs(i, is_limit, is_num, pre):
@@ -192,6 +196,7 @@ class Solution:
         url: https://leetcode.cn/problems/number-of-beautiful-integers-in-the-range/
         tag: digital_dp|inclusion_exclusion
         """
+
         def check(num):
             @lru_cache(None)
             def dfs(i, is_limit, is_num, odd, rest):
@@ -231,4 +236,38 @@ class Solution:
         tag: counter|digital_dp|inclusion_exclusion
         """
         dd = DigitalDP()
-        return dd.count_digit(high, d) - dd.count_digit(low - 1, d)
+        return dd.count_digit_dp(high, d) - dd.count_digit_dp(low - 1, d)
+
+    @staticmethod
+    def abc_336e(ac=FastIO()):
+        """
+        url: https://atcoder.jp/contests/abc336/tasks/abc336_e
+        tag: brut_force|digital_dp
+        """
+        num = ac.read_int()
+        num += 1
+        lst = [int(x) for x in str(num)]
+        n = len(lst)
+        ans = 0
+        for digit_sum in range(1, 9 * n + 1):
+            pre = [0] * digit_sum * (digit_sum + 1)
+            x = x_mod = 0
+            for k in range(n):
+                cur = [0] * digit_sum * (digit_sum + 1)
+                for i in range(min(digit_sum + 1, (k + 1) * 9 + 1)):
+                    for j in range(digit_sum):
+                        if not pre[i * digit_sum + j]:
+                            continue
+                        for d in range(10):
+                            if i + d > digit_sum:
+                                break
+                            cur[(i + d) * digit_sum + (j * 10 + d) % digit_sum] += pre[i * digit_sum + j]
+                for i in range(lst[k]):
+                    if x + i <= digit_sum:
+                        cur[(x + i) * digit_sum + (x_mod * 10 + i) % digit_sum] += 1
+                x += lst[k]
+                x_mod = (x_mod * 10 + lst[k]) % digit_sum
+                pre = cur
+            ans += pre[digit_sum * digit_sum + 0]
+        ac.st(ans)
+        return

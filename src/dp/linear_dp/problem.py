@@ -3,6 +3,7 @@ Algorithm：liner_dp
 Description：prefix_suffix|maximum_sub_consequence_sum
 
 ====================================LeetCode====================================
+940（https://leetcode.cn/problems/distinct-subsequences-ii/）liner_dp|classical|different_subsequence
 87（https://leetcode.cn/problems/scramble-string/）liner_dp|memory_search
 2361（https://leetcode.cn/problems/minimum-costs-using-the-train-line/）linear_dp
 2318（https://leetcode.cn/problems/number-of-distinct-roll-sequences/）linear_dp|brute_force|counter
@@ -105,6 +106,20 @@ P2359（https://www.luogu.com.cn/problem/P2359）linear_dp
 1221D（https://codeforces.com/problemset/problem/1221/D）liner_dp
 731E（https://codeforces.com/contest/731/problem/E）prefix_sum|reverse_order|liner_dp
 1913D（https://codeforces.com/contest/1913/problem/D）monotonic_stack|linear_dp|prefix_sum
+1703G（https://codeforces.com/contest/1703/problem/G）greedy|linear_dp|data_range|limit_operation
+1829H（https://codeforces.com/contest/1829/problem/H）counter|linear_dp|classical|bit_operation|data_range
+977F（https://codeforces.com/contest/977/problem/F）linear_dp|specific_plan
+988F（https://codeforces.com/contest/988/problem/F）linear_dp|brute_force|classical|greedy
+988D（https://codeforces.com/contest/988/problem/D）linear_dp|brute_force
+999F（https://codeforces.com/contest/999/problem/F）linear_dp|brute_force
+1066F（https://codeforces.com/contest/1066/problem/F）linear_dp|brute_force|greedy|sorting
+1066D（https://codeforces.com/contest/1066/problem/D）linear_dp|two_pointer
+1108D（https://codeforces.com/contest/1108/problem/D）linear_dp|specific_plan
+1154F（https://codeforces.com/contest/1154/problem/F）linear_dp|reverse_thinking|brute_force|greedy|implemention|data_range
+1176F（https://codeforces.com/contest/1176/problem/F）linear_dp|greedy|implemention
+1249E（https://codeforces.com/contest/1249/problem/E）linear_dp|classical|greedy
+1256E（https://codeforces.com/contest/1256/problem/E）linear_dp|greedy|brain_teaser
+1353E（https://codeforces.com/contest/1353/problem/E）linear_dp|greedy|brute_force
 
 ====================================AtCoder=====================================
 ABC129E（https://atcoder.jp/contests/abc129/tasks/abc129_e）brain_teaser|digital_dp
@@ -113,13 +128,18 @@ ABC129E（https://atcoder.jp/contests/abc129/tasks/abc129_e）brain_teaser|digit
 96（https://www.acwing.com/problem/content/98/）liner_dp|classical|hanoi_tower
 4414（https://www.acwing.com/problem/content/description/4417/）liner_dp
 
+
+=====================================LibraryChecker=====================================
+1（https://www.51nod.com/Challenge/Problem.html#problemId=1202）liner_dp|classical|different_subsequence
+
+
 """
 import bisect
 from collections import defaultdict, Counter, deque
 from functools import lru_cache
 from typing import List
 
-from src.mathmatics.number_theory.template import NumberTheory
+from src.mathmatics.number_theory.template import NumFactor
 from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
@@ -134,6 +154,7 @@ class Solution:
         url: https://leetcode.cn/problems/maximum-score-from-performing-multiplication-operations/
         tag: liner_dp
         """
+
         @lru_cache(None)
         def dfs(i, j):
             ind = i + (n - 1 - j)
@@ -684,6 +705,7 @@ class Solution:
         url: https://www.luogu.com.cn/problem/P2476
         tag: counter|linear_dp|memory_search
         """
+
         @lru_cache(None)
         def dfs(a, b, c, d, e, pre):
             if a + b + c + d + e == 0:
@@ -1147,6 +1169,7 @@ class Solution:
         url: https://leetcode.cn/problems/minimum-number-of-days-to-eat-n-oranges/
         tag: brain_teaser|greedy|memory_search|liner_dp
         """
+
         @lru_cache(None)
         def dfs(num):
             if num <= 1:
@@ -1156,3 +1179,86 @@ class Solution:
             return a if a < b else b
 
         return dfs(n)
+
+    @staticmethod
+    def cf_1829h(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1829/problem/H
+        tag: counter|linear_dp|classical|bit_operation|data_range
+        """
+        mod = 10 ** 9 + 7
+        ceil = 2 * 10 ** 5
+        power = [1] * (ceil + 1)
+        for i in range(1, ceil + 1):
+            power[i] = (power[i - 1] * 2) % mod
+
+        for _ in range(ac.read_int()):
+            n, k = ac.read_list_ints()
+            cnt = [0] * 64
+            for num in ac.read_list_ints():
+                cnt[num] += 1
+
+            pre = [0] * 64
+            for num in range(64):
+                if cnt[num]:
+                    cur = pre[:]
+                    for p in range(64):
+                        cur[p & num] += pre[p] * (power[cnt[num]] - 1) % mod
+                    cur[num] += (power[cnt[num]] - 1) % mod
+                    pre = [x % mod for x in cur]
+            ans = 0
+            for p in range(64):
+                if bin(p).count("1") == k:
+                    ans += pre[p]
+            ans %= mod
+            ac.st(ans)
+        return
+
+    @staticmethod
+    def cf_1154f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1154/problem/F
+        tag: linear_dp|reverse_thinking|brute_force|greedy|implemention|data_range
+        """
+        n, m, k = ac.read_list_ints()
+        nums = ac.read_list_ints()
+        nums.sort()
+        nums = nums[:k]
+        pre = ac.accumulate(nums)
+        cost = [0] * (k + 1)
+        for _ in range(m):
+            x, y = ac.read_list_ints()
+            if x <= k and cost[x] < y:
+                cost[x] = y
+        dp = [inf] * (k + 1)
+        dp[k] = 0
+        for i in range(k - 1, -1, -1):
+            dp[i] = dp[i + 1] + nums[i]
+            for j in range(i, k):
+                x = j - i + 1
+                y = cost[x]
+                cur = dp[j + 1] + pre[j + 1] - pre[i] - (pre[i + y] - pre[i])
+                if cur < dp[i]:
+                    dp[i] = cur
+        ac.st(dp[0])
+        return
+
+    @staticmethod
+    def library_check_1(ac=FastIO()):
+        """
+        url: https://www.51nod.com/Challenge/Problem.html#problemId=1202
+        tag: liner_dp|classical|different_subsequence
+        """
+        mod = 10 ** 9 + 7
+        n = ac.read_int()
+        dp = [0] * (n + 1)
+        pre = dict()
+        for i in range(n):
+            num = ac.read_int()
+            if num not in pre:
+                dp[i + 1] = (2 * dp[i] + 1) % mod
+            else:
+                dp[i + 1] = (2 * dp[i] - dp[pre[num]]) % mod
+            pre[num] = i
+        ac.st(dp[-1])
+        return

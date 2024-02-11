@@ -48,7 +48,7 @@ P8733（https://www.luogu.com.cn/problem/P8733）floyd|shortest_path|state_dp
 580D（https://codeforces.com/problemset/problem/580/D）state_dp
 165E（https://codeforces.com/problemset/problem/165/E）liner_dp|state_dp|brute_force
 11D（https://codeforces.com/contest/11/problem/D）state_dp|undirected|counter
-1294F（https://codeforces.com/contest/1294/problem/F）classical|tree_diameter
+1102F（https://codeforces.com/contest/1102/problem/F）state_dp|classical|brute_force|fill_table|refresh_table
 
 =====================================AtCoder====================================
 ABC332E（https://atcoder.jp/contests/abc332/tasks/abc332_e）math|state_dp|classical
@@ -67,7 +67,7 @@ from itertools import combinations, accumulate
 from operator import or_
 from typing import List
 
-from src.utils.fast_io import FastIO, ac_min, ac_max
+from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
 
@@ -91,8 +91,8 @@ class Solution:
         m = n // k
         for i in range(1, 1 << n):
             x = nums[ind[i & (-i)]]
-            ceil[i] = ac_max(ceil[i & (i - 1)], x)
-            floor[i] = ac_min(floor[i & (i - 1)], x)
+            ceil[i] = max(ceil[i & (i - 1)], x)
+            floor[i] = min(floor[i & (i - 1)], x)
             if i.bit_count() == m:
                 lst = [nums[j] for j in range(n) if i & (1 << j)]
                 if len(set(lst)) == m:
@@ -108,7 +108,7 @@ class Solution:
             sub = mask
             while sub:
                 if sub in group:
-                    dp[i | sub] = ac_min(dp[i | sub], dp[i] + group[sub])
+                    dp[i | sub] = min(dp[i | sub], dp[i] + group[sub])
                 sub = (sub - 1) & mask
         return dp[-1] if dp[-1] < inf else -1
 
@@ -130,7 +130,7 @@ class Solution:
                 sub = i
                 while sub:
                     if cost[sub] < cur[i] and pre[i ^ sub] < cur[i]:
-                        cur[i] = ac_max(pre[i ^ sub], cost[sub])
+                        cur[i] = max(pre[i ^ sub], cost[sub])
                     sub = (sub - 1) & i
             for i in range(1 << n):
                 pre[i] = cur[i]
@@ -926,3 +926,44 @@ class Solution:
                     cur = dp[sub] + (nums[pre] & (j + 1))
                     dp[sub + 3 ** j] = max(dp[sub + 3 ** j], cur)
         return max(dp)
+
+    @staticmethod
+    def cf_1102f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1102/problem/F
+        tag: state_dp|classical|brute_force|fill_table|refresh_table
+        """
+        m, n = ac.read_list_ints()
+        grid = [ac.read_list_ints() for _ in range(m)]
+        if m == 1:
+            ans = min(abs(grid[0][j + 1] - grid[0][j]) for j in range(n - 1))
+            ac.st(ans)
+            return
+
+        cost = [[inf] * m for _ in range(m)]
+        end = [[inf] * m for _ in range(m)]
+        for i in range(m):
+            for j in range(i + 1, m):
+                cost[i][j] = cost[j][i] = min(abs(grid[i][x] - grid[j][x]) for x in range(n))
+            if n > 1:
+                for j in range(m):
+                    if j != i:
+                        end[i][j] = min(abs(grid[i][x - 1] - grid[j][x]) for x in range(1, n))
+        ans = 0
+        for i in range(m):
+            dp = [[0] * (1 << m) for _ in range(m)]
+            dp[i][1 << i] = inf
+            for s in range(1, 1 << m):
+                tmp_s = [y for y in range(m) if not s & (1 << y)]
+                for x in range(m):
+                    if dp[x][s]:
+                        for y in tmp_s:
+                            dp[y][s | (1 << y)] = ac.max(dp[y][s | (1 << y)], ac.min(dp[x][s], cost[x][y]))
+            for x in range(m):
+                cur = dp[x][-1]
+                if n > 1:
+                    cur = ac.min(cur, end[x][i])
+                if cur > ans:
+                    ans = cur
+        ac.st(ans)
+        return

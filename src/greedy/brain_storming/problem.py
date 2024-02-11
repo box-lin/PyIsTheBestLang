@@ -4,6 +4,7 @@ Algorithm：greedy|reverse_thinking|pigeonhole_principle|inclusion_exclusion|cus
 Description：brain_teaser
 
 ====================================LeetCode====================================
+30（https://leetcode.cn/problems/p0NxJO）greedy|regret_heapq|brain_teaser
 134（https://leetcode.cn/problems/gas-station/）greedy
 330（https://leetcode.cn/problems/patching-array/）greedy
 1199（https://leetcode.cn/problems/minimum-time-to-build-blocks/）huffman_tree|greedy|classical|heapq
@@ -44,6 +45,7 @@ Description：brain_teaser
 1946（https://leetcode.cn/problems/largest-number-after-mutating-substring/description/）greedy|classical
 1540（https://leetcode.cn/problems/can-convert-string-in-k-moves/）greedy|brain_teaser|pointer
 1121（https://leetcode.cn/problems/divide-array-into-increasing-sequences/description/）brain_teaser|greedy|classical|maximum
+3012（https://leetcode.com/problems/minimize-length-of-array-using-operations/）brain_teaser|perishu_theorem|hard|greedy
 
 =====================================LuoGu======================================
 P1031（https://www.luogu.com.cn/problem/P1031）greedy|prefix_sum|counter
@@ -133,7 +135,7 @@ P8887（https://www.luogu.com.cn/problem/P8887）brain_teaser|greedy
 1025C（https://codeforces.com/problemset/problem/1025/C）brain_teaser
 1042C（https://codeforces.com/problemset/problem/1042/C）greedy|classification_discussion|implemention
 439C（https://codeforces.com/problemset/problem/439/C）greedy|classification_discussion
-1283E（https://codeforces.com/problemset/problem/1283/E）greedy|classification_discussion
+1283E（https://codeforces.com/problemset/problem/1283/E）greedy|classification_discussion|linear_dp
 1092C（https://codeforces.com/contest/1092/problem/C）brain_teaser|classification_discussion
 1280B（https://codeforces.com/problemset/problem/1280/B）brain_teaser|classification_discussion
 723C（https://codeforces.com/problemset/problem/723/C）greedy|implemention|construction
@@ -156,6 +158,28 @@ P8887（https://www.luogu.com.cn/problem/P8887）brain_teaser|greedy
 1649B（https://codeforces.com/contest/1649/problem/B）maximum_greedy|classical
 1914E2（https://codeforces.com/contest/1914/problem/E2）greedy|custom_sort
 1929D（https://codeforces.com/contest/1920/problem/D）data_range|brute_force|reverse_thinking
+724D（https://codeforces.com/contest/724/problem/D）greedy|implemention|brain_teaser
+1669D（https://codeforces.com/contest/1669/problem/D）brain_teaser
+1807G2（https://codeforces.com/contest/1807/problem/G2）brain_teaser|classical|sorting|greedy
+1873G（https://codeforces.com/contest/1873/problem/G）brain_teaser
+977D（https://codeforces.com/contest/977/problem/D）brain_teaser|greedy|classical|sorting
+978G（https://codeforces.com/contest/978/problem/G）brain_teaser|greedy|sorting|implemention|reverse_thinking
+999D（https://codeforces.com/contest/999/problem/D）greedy|brute_force
+1144G（https://codeforces.com/contest/1144/problem/G）linear_dp|greedy|classical|construction|brain_teaser
+1157G（https://codeforces.com/contest/1157/problem/G）brain_teaser|brute_force|classical|implemention|greedy
+1157F（https://codeforces.com/contest/1157/problem/F）greedy|brain_teaser|construction|specific_plan
+1157C2（https://codeforces.com/contest/1157/problem/C2）greedy|brain_teaser|implemention
+1183G（https://codeforces.com/contest/1183/problem/G）greedy|brain_teaser|implemention|classical
+1183D（https://codeforces.com/contest/1183/problem/D）greedy|brain_teaser|implemention|classical
+1183F（https://codeforces.com/contest/1183/problem/F）greedy|brain_teaser|classical|brute_force|special_judge
+1203F1（https://codeforces.com/contest/1203/problem/F1）greedy|brain_teaser|linear_dp|define_sort|classical
+1203F2（https://codeforces.com/contest/1203/problem/F2）greedy|brain_teaser|linear_dp|define_sort|classical
+1249D2（https://codeforces.com/contest/1249/problem/D2）greedy|offline_query|sorted_list
+1256F（https://codeforces.com/contest/1256/problem/F）greedy|brain_teaser|reverse_pair|bubble_sort|classical
+1296E2（https://codeforces.com/contest/1296/problem/E2）greedy|brain_teaser|lis
+1296E1（https://codeforces.com/contest/1296/problem/E1）greedy|brain_teaser|lis
+1367F2（https://codeforces.com/contest/1367/problem/F2）greedy|brain_teaser|lis
+1385F（https://codeforces.com/contest/1385/problem/F）greedy|brain_teaser|topological_sort
 
 ====================================AtCoder=====================================
 ARC062A（https://atcoder.jp/contests/abc046/tasks/arc062_a）brain_teaser|greedy|custom_sort
@@ -182,18 +206,18 @@ ABC137D（https://atcoder.jp/contests/abc137/tasks/abc137_d）reverse_order|brai
 4430（https://www.acwing.com/problem/content/description/4433/）brute_force|prefix_suffix|bracket
 4492（https://www.acwing.com/problem/content/description/4495/）brain_teaser|odd_even
 4623（https://www.acwing.com/problem/content/description/4626/）greedy|implemention
-
 """
 
 import heapq
 import math
 from bisect import insort_left, bisect_left
 from collections import Counter, deque, defaultdict
+from functools import reduce
 from typing import List
 
 from src.data_structure.sorted_list.template import SortedList
-from src.mathmatics.number_theory.template import NumberTheory
-from src.utils.fast_io import FastIO
+from src.mathmatics.number_theory.template import NumFactor
+from src.utils.fast_io import FastIO, inf
 
 
 class Solution:
@@ -328,6 +352,7 @@ class Solution:
         url: https://www.acwing.com/problem/content/description/1538/
         tag: greedy|card_split_average|classical|circular_array
         """
+
         def check(nums):
             # 环形均分纸牌
             nn = len(nums)
@@ -1108,7 +1133,7 @@ class Solution:
         if n % 2 == 0:
             ac.st(n // 2)
         else:
-            lst = NumberTheory().get_prime_factor(n)
+            lst = NumFactor().get_prime_factor(n)
             x = lst[0][0]
             ac.st(1 + (n - x) // 2)
         return
@@ -1143,6 +1168,7 @@ class Solution:
         url: https://codeforces.com/contest/1665/problem/C
         tag: graph|greedy
         """
+
         def solve():
             n = ac.read_int()
             dct = [[] for _ in range(n)]
@@ -1266,6 +1292,7 @@ class Solution:
         url: https://leetcode.cn/problems/sum-game/description/
         tag: game_dp|brain_teaser|classification_discussion
         """
+
         # 博弈brain_teaser|classification_discussion
         def check(s):
             res = 0
@@ -1403,7 +1430,7 @@ class Solution:
                 if c > ceil:
                     break
 
-            ans = [0]*q
+            ans = [0] * q
             m = len(ops)
             for i, kk in enumerate(queries):
 
@@ -1426,4 +1453,248 @@ class Solution:
                             ans[i] = nums[ss + kk - cc - 1][1]
                             break
             ac.lst(ans)
+        return
+
+    @staticmethod
+    def lc_3012(nums: List[int]) -> int:
+        """
+        url: https://leetcode.com/problems/minimize-length-of-array-using-operations/
+        tag: brain_teaser|perishu_theorem|hard|greedy
+        """
+        low = min(nums)
+        gcd = reduce(math.gcd, nums)
+        if gcd < low:
+            return 1
+        cnt = nums.count(low)
+        return (cnt + 1) // 2
+
+    @staticmethod
+    def cf_724d(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/724/problem/D
+        tag: greedy|implemention|brain_teaser
+        """
+        m = ac.read_int()
+        s = ac.read_str()
+        n = len(s)
+        for i in range(26):
+            ind = []
+            w = chr(i + ord("a"))
+            diff = [0] * n
+            for j in range(n):
+                if ord(s[j]) - ord("a") <= i:
+                    ind.append(j)
+                    diff[j] = 1
+            pre = ac.accumulate(diff)
+            if all(pre[i + 1] - pre[i - m + 1] > 0 for i in range(m - 1, n)):
+                stack = [-1]
+                for j in ind:
+                    while len(stack) >= 2 and s[stack[-1]] == w and j - stack[-2] <= m:
+                        stack.pop()
+                    stack.append(j)
+                while len(stack) >= 2 and s[stack[-1]] == w and stack[-2] >= n - m:
+                    stack.pop()
+                lst = [s[x] for x in stack[1:]]
+                lst.sort()
+                ac.st("".join(lst))
+                return
+        return
+
+    @staticmethod
+    def cf_1144g(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1144/problem/G
+        tag: linear_dp|greedy|classical|construction|brain_teaser
+        """
+        ascend = -inf
+        descend = inf
+        n = ac.read_int()
+        nums = ac.read_list_ints()
+        ans = [0] * n
+        for i in range(n):
+            if ascend < nums[i] and descend <= nums[i]:
+                ascend = nums[i]
+            elif ascend >= nums[i] and descend > nums[i]:
+                descend = nums[i]
+                ans[i] = 1
+            elif ascend < nums[i] < descend:
+                if i + 1 < n and nums[i + 1] < nums[i]:
+                    ans[i] = 1
+                    descend = nums[i]
+                else:
+                    ascend = nums[i]
+            else:
+                ac.st("NO")
+                break
+        else:
+            ac.st("YES")
+            ac.lst(ans)
+        return
+
+    @staticmethod
+    def cf_1157g(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1157/problem/G
+        tag: brain_teaser|brute_force|classical|implemention|greedy
+        """
+        m, n = ac.read_list_ints()
+        grid = [ac.read_list_ints() for _ in range(m)]
+
+        tmp = [g[:] for g in grid]
+        row = [0] * m
+        col = [0] * n
+        for j in range(n):  # first_row = 0
+            if tmp[0][j]:
+                col[j] = 1
+                for i in range(m):
+                    tmp[i][j] = 1 - tmp[i][j]
+
+        cnt = 0
+        for i in range(1, m):
+            if cnt >= 2:
+                break
+            dct = set(tmp[i])
+            if len(dct) == 1:
+                if cnt:
+                    if dct != {1}:
+                        row[i] = 1
+                else:
+                    if dct != {0}:
+                        row[i] = 1
+                continue
+            pre = tmp[i][0]
+            cur = 1
+            for num in tmp[i][1:]:
+                if num != pre:
+                    cur += 1
+                pre = num
+                if cur > 2:
+                    break
+            if cur > 2:
+                cnt = 2
+            else:
+                if tmp[i][0]:
+                    row[i] = 1
+                cnt += 1
+        if cnt <= 1:
+            ac.st("YES")
+            ac.st("".join(str(x) for x in row))
+            ac.st("".join(str(x) for x in col))
+            return
+
+        tmp = [g[:] for g in grid]   # last_row = 1
+        row = [0] * m
+        col = [0] * n
+        for j in range(n):
+            if tmp[-1][j] == 0:
+                col[j] = 1
+                for i in range(m):
+                    tmp[i][j] = 1 - tmp[i][j]
+
+        cnt = 0
+        for i in range(m - 2, -1, -1):
+            if cnt >= 2:
+                break
+            dct = set(tmp[i])
+            if len(dct) == 1:
+                if cnt:
+                    if dct != {0}:
+                        row[i] = 1
+                else:
+                    if dct != {1}:
+                        row[i] = 1
+                continue
+            pre = tmp[i][0]
+            cur = 1
+            for num in tmp[i][1:]:
+                if num != pre:
+                    cur += 1
+                pre = num
+                if cur > 2:
+                    break
+            if cur > 2:
+                cnt = 2
+            else:
+                if tmp[i][0]:
+                    row[i] = 1
+                cnt += 1
+        if cnt <= 1:
+            ac.st("YES")
+            ac.st("".join(str(x) for x in row))
+            ac.st("".join(str(x) for x in col))
+            return
+        ac.st("NO")
+        return
+
+    @staticmethod
+    def cf_1157f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1157/problem/F
+        tag: greedy|brain_teaser|construction|specific_plan
+        """
+        ac.read_int()
+        a = ac.read_list_ints()
+        m = 2 * 10 ** 5
+        cnt = [0] * (m + 1)
+        for num in a:
+            cnt[num] += 1
+        ans = 0
+        res = [-1, -1]
+        pre = c = 0
+        for num in range(1, m + 1):
+            if cnt[num]:
+                cur = c + cnt[num]
+                if cur > ans:
+                    ans = cur
+                    res = [num - pre, num]
+                if cnt[num] > 1:
+                    pre += 1
+                    c += cnt[num]
+                else:
+                    pre = 1
+                    c = 1
+            else:
+                pre = c = 0
+        ac.st(ans)
+        lst = [res[0]]
+        cnt[res[0]] -= 1
+        for i in range(res[0] + 1, res[1] + 1):
+            lst.append(i)
+            cnt[i] -= 1
+        for i in range(res[1], res[0] - 1, -1):
+            lst.extend([i] * cnt[i])
+        ac.lst(lst)
+        return
+
+    @staticmethod
+    def cf_1183f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1183/problem/F
+        tag: greedy|brain_teaser|classical|brute_force|special_judge
+        """
+        for _ in range(ac.read_int()):
+            ac.read_int()
+            nums = ac.read_list_ints()
+            ceil = max(nums)
+            ans = ceil
+            for num in nums:
+                if ceil % num:
+                    if num + ceil > ans:
+                        ans = num + ceil
+            if ceil % 30 == 0 and ceil // 2 in nums and ceil // 3 in nums and ceil // 5 in nums:
+                x, y, z = ceil // 2, ceil // 3, ceil // 5
+                if x % y and y % z and x % z:
+                    cur = x + y + z
+                    if cur > ans:
+                        ans = cur
+
+            nums = [num for num in nums if ceil % num]
+            if nums:
+                ceil2 = max(nums)
+                for num in nums:
+                    if ceil2 % num:
+                        if num + ceil2 + ceil > ans:
+                            ans = num + ceil2 + ceil
+            ac.st(ans)
+
         return

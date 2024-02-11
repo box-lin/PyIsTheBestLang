@@ -1,10 +1,10 @@
 import unittest
 
-from src.graph.tarjan.template import Tarjan
-
 
 class TestGeneral(unittest.TestCase):
-    def test_undirected_graph(self):
+
+    def test_outline_dp(self):
+        pass
         return
 
 

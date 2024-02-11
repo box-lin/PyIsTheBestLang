@@ -16,6 +16,9 @@ Description：range_query|binary_search
 2250（https://leetcode.cn/problems/count-number-of-rectangles-containing-each-point/）offline_query|pointer|sort|binary_search
 2426（https://leetcode.cn/problems/number-of-pairs-satisfying-inequality/）math|sorted_list|binary_search
 2276（https://leetcode.cn/problems/count-integers-in-intervals/）sorted_list|implemention|classical
+3013（https://leetcode.com/problems/divide-an-array-into-subarrays-with-minimum-cost-ii/）sorted_list|top_k_sum
+1851（https://leetcode.cn/problems/minimum-interval-to-include-each-query）
+
 
 =====================================LuoGu======================================
 P7333（https://www.luogu.com.cn/problem/P7333）sort|sorted_list|circular_array|range_query
@@ -35,6 +38,8 @@ P5459（https://www.luogu.com.cn/problem/P5459）prefix_sum|sorted_list|binary_s
 P6538（https://www.luogu.com.cn/problem/P6538）sorted_list|greedy
 P7912（https://www.luogu.com.cn/problem/P7912）sorted_list|implemention
 P8667（https://www.luogu.com.cn/problem/P8667）sorted_list
+P3369（https://www.luogu.com.cn/problem/P3369）sorted_list
+P6136（https://www.luogu.com.cn/problem/P6136）sorted_list
 
 ===================================CodeForces===================================
 459D（https://codeforces.com/problemset/problem/459/D）sorted_list|counter
@@ -42,7 +47,11 @@ P8667（https://www.luogu.com.cn/problem/P8667）sorted_list
 1354D（https://codeforces.com/problemset/problem/1354/D）sorted_list
 1005E2（https://codeforces.com/contest/1005/problem/E2）median|inclusion_exclusion|prefix_sum|sorted_list|binary_search
 1619E（https://codeforces.com/contest/1619/problem/E）mex|greedy
+1676H2（https://codeforces.com/contest/1676/problem/H2）sorted_list|inversion_pair
+1915F（https://codeforces.com/contest/1915/problem/F）sorted_list|sorting
 
+===================================AtCoder===================================
+ABC306E（https://atcoder.jp/contests/abc306/tasks/abc306_e）sorted_list|top_k_sum
 
 ===================================CodeForces===================================
 129（https://www.acwing.com/problem/content/129/）greedy|classical|sorted_list
@@ -52,7 +61,7 @@ import bisect
 from bisect import insort_left, bisect_left
 from typing import List
 
-from src.data_structure.sorted_list.template import SortedList
+from src.data_structure.sorted_list.template import SortedList, TopKSum
 from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
@@ -376,6 +385,7 @@ class Solution:
         url: https://leetcode.cn/problems/count-integers-in-intervals/
         tag: sorted_list|implemention|classical
         """
+
         class CountIntervals:
 
             def __init__(self):
@@ -399,3 +409,110 @@ class Solution:
                 return self.sum
 
         return CountIntervals
+
+    @staticmethod
+    def lc_3013(nums: List[int], k: int, dist: int) -> int:
+        """
+        url: https://leetcode.com/problems/divide-an-array-into-subarrays-with-minimum-cost-ii/
+        tag: sorted_list|top_k_sum
+        """
+        n = len(nums)
+        ans = inf
+        lst = TopKSum(k - 2)
+        j = 2
+        for i in range(1, n):
+            if i >= 2:
+                lst.remove(nums[i])
+            if n - i - 1 < k - 2:
+                break
+            while j <= i + dist and j < n:
+                lst.add(nums[j])
+                j += 1
+            if len(lst.lst) >= k - 2:
+                cur = nums[0] + nums[i] + lst.top_k_sum
+                if cur < ans:
+                    ans = cur
+        return ans
+
+    @staticmethod
+    def abc_306e(ac=FastIO()):
+        """
+        url: https://atcoder.jp/contests/abc306/tasks/abc306_e
+        tag: sorted_list|top_k_sum
+        """
+        n, k, q = ac.read_list_ints()
+        nums = [0] * n
+        lst = TopKSum(k)
+        for _ in range(q):
+            x, y = ac.read_list_ints()
+            x -= 1
+            if nums[x]:
+                lst.remove(-nums[x])
+            nums[x] = y
+            if nums[x]:
+                lst.add(-nums[x])
+            ac.st(-lst.top_k_sum)
+        return
+
+    @staticmethod
+    def lg_p3369(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P3369
+        tag: sorted_list
+        """
+        n = ac.read_int()
+        lst = SortedList()
+        for _ in range(n):
+            op, x = ac.read_list_ints()
+            if op == 1:
+                lst.add(x)
+            elif op == 2:
+                lst.discard(x)
+            elif op == 3:
+                ac.st(lst.bisect_left(x) + 1)
+            elif op == 4:
+                ac.st(lst[x - 1])
+            elif op == 5:
+                i = lst.bisect_left(x)
+                if i == len(lst) or lst[i] >= x:
+                    i -= 1
+                ac.st(lst[i])
+            else:
+                i = lst.bisect_right(x)
+                ac.st(lst[i])
+        return
+
+    @staticmethod
+    def lg_p6136(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P6136
+        tag: sorted_list
+        """
+        n, q = ac.read_list_ints()
+        lst = SortedList(ac.read_list_ints())
+        ans = last = 0
+        for _ in range(q):
+            op, x = ac.read_list_ints()
+            x ^= last
+            if op == 1:
+                lst.add(x)
+            elif op == 2:
+                lst.discard(x)
+            elif op == 3:
+                last = lst.bisect_left(x) + 1
+                ans ^= last
+            elif op == 4:
+                last = lst[x - 1]
+                ans ^= last
+            elif op == 5:
+                i = lst.bisect_left(x)
+                if i == len(lst) or lst[i] >= x:
+                    i -= 1
+                last = lst[i]
+                ans ^= last
+            else:
+                i = lst.bisect_right(x)
+                last = lst[i]
+                ans ^= last
+        ac.st(ans)
+        return

@@ -5,34 +5,53 @@ Description：counter|sliding_window|double_random_mod|hash_crush
 ====================================LeetCode====================================
 214（https://leetcode.cn/problems/shortest-palindrome/）reverse_hash|string_hash|longest_prefix_palindrome_substring|kmp|manacher
 572（https://leetcode.cn/problems/subtree-of-another-tree/）tree_hash
-1044（https://leetcode.cn/problems/shortest-palindrome/）binary_search|string_hash
-1316（https://leetcode.cn/problems/shortest-palindrome/）string_hash
+1044（https://leetcode.cn/problems/shortest-palindrome/）suffix_array|height|classical|string_hash
+1316（https://leetcode.cn/problems/distinct-echo-substrings）string_hash
 2156（https://leetcode.cn/problems/find-substring-with-given-hash-value/）reverse_hash|string_hash
 652（https://leetcode.cn/problems/find-duplicate-subtrees/）tree_hash
-1554（https://leetcode.cn/problems/strings-differ-by-one-character/）prefix_suffix|hash
+1554（https://leetcode.cn/problems/strings-differ-by-one-character/）string_hash|trie
 1923（https://leetcode.cn/problems/longest-common-subpath/）binary_search|rolling_hash
 1948（https://leetcode.cn/problems/delete-duplicate-folders-in-system/）trie_like|tree_hash
 2261（https://leetcode.cn/problems/k-divisible-elements-subarrays/submissions/）string_hash
+187（https://leetcode-cn.com/problems/repeated-dna-sequences/）
+2851（https://leetcode.cn/problems/string-transformation/）string_hash|kmp|matrix_dp|matrix_fast_power
+2977（https://leetcode.cn/problems/minimum-cost-to-convert-string-ii/）string_hash|dp|dijkstra|trie
 
 =====================================LuoGu======================================
-list?user=739032&status=12&page=14（https://www.luogu.com.cn/record/list?user=739032&status=12&page=14）string_hash|kmp
 P6140（https://www.luogu.com.cn/problem/P6140）greedy|implemention|lexicographical_order|string_hash|binary_search|reverse_order|lcs
 P2870（https://www.luogu.com.cn/problem/P2870）greedy|implemention|lexicographical_order|string_hash|binary_search|reverse_order|lcs
 P5832（https://www.luogu.com.cn/problem/P5832）string_hash
 P2852（https://www.luogu.com.cn/problem/P2852）binary_search|suffix_array|height|monotonic_queue|string_hash
 P4656（https://www.luogu.com.cn/problem/P4656）string_hash|greedy
 P6739（https://www.luogu.com.cn/problem/P6739）prefix_suffix|string_hash
+P3370（https://www.luogu.com.cn/problem/P3370）string_hash
+P2601（https://www.luogu.com.cn/problem/P2601）matrix_hash
+P4824（https://www.luogu.com.cn/problem/P4824）string_hash
+P4503（https://www.luogu.com.cn/problem/P4503）string_hash
+P3538（https://www.luogu.com.cn/problem/P3538）string_hash|prime_factor|brute_force|circular_section
 
 ===================================CodeForces===================================
-1800D（https://codeforces.com/problemset/problem/1800/D）prefix_suffix|hash
+1800D（https://codeforces.com/contest/1800/problem/D）prefix_suffix|hash
+514C（https://codeforces.com/problemset/problem/514/C）string_hash
+1200E（https://codeforces.com/problemset/problem/1200/E）string_hash|kmp
+580E（https://codeforces.com/problemset/problem/580/E）segment_tree_hash|range_change|range_hash_reverse|circular_section
+452F（https://codeforces.com/contest/452/problem/F）segment_tree_hash|string_hash|point_set|range_hash|range_reverse
+7D（https://codeforces.com/problemset/problem/7/D）string_hash|palindrome|classical
+835D（https://codeforces.com/problemset/problem/835/D）palindrome|string_hash
 
 ====================================AtCoder=====================================
 ABC141E（https://atcoder.jp/contests/abc141/tasks/abc141_e）binary_search|string_hash|check
 
 =====================================AcWing=====================================
-138（https://www.acwing.com/problem/content/140/）string_hash
-156（https://www.acwing.com/problem/content/description/158/）matrix_hash
-157（https://www.acwing.com/problem/content/description/159/）tree_hash|tree_minimum_expression
+140（https://www.acwing.com/problem/content/140/）string_hash
+158（https://www.acwing.com/problem/content/description/158/）matrix_hash
+159（https://www.acwing.com/problem/content/description/159/）tree_hash|tree_minimum_expression
+139（https://www.acwing.com/problem/content/139/）matrix_hash
+
+=====================================LibraryChecker=====================================
+1（https://ac.nowcoder.com/acm/contest/64384/D）string_hash|implemention
+2（https://www.luogu.com.cn/problem/UVA11019）matrix_hash|string_hash
+3（https://ac.nowcoder.com/acm/problem/51003）matrix_hash|string_hash
 
 """
 
@@ -42,9 +61,12 @@ from itertools import accumulate
 from typing import List
 
 from src.basis.binary_search.template import BinarySearch
+from src.graph.dijkstra.template import Dijkstra
 from src.mathmatics.fast_power.template import MatrixFastPower
-from src.strings.string_hash.template import StringHash
-from src.utils.fast_io import FastIO
+from src.mathmatics.prime_factor.template import PrimeFactor
+from src.strings.string_hash.template import StringHash, PointSetRangeHashReverse, RangeSetRangeHashReverse, \
+    MatrixHash, MatrixHashReverse
+from src.utils.fast_io import FastIO, inf
 
 
 class Solution:
@@ -180,12 +202,12 @@ class Solution:
         return list(repeat)
 
     @staticmethod
-    def cf_1800d(ac=FastIO()):
+    def cf_1800d_1(ac=FastIO()):
         """
-        url: https://codeforces.com/problemset/problem/1800/D
+        url: https://codeforces.com/contest/1800/problem/D
         tag: prefix_suffix|hash
         """
-        # 字符串prefix_suffixhash|和，两个hash避免碰撞
+
         n = 2 * 10 ** 5
         p1 = random.randint(26, 100)
         p2 = random.randint(26, 100)
@@ -225,6 +247,23 @@ class Solution:
         return
 
     @staticmethod
+    def cf_1800d_2(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1800/problem/D
+        tag: prefix_suffix|hash
+        """
+
+        for _ in range(ac.read_int()):
+            n = ac.read_int()
+            s = ac.read_str()
+            ans = n - 1
+            for i in range(2, n):
+                if s[i] == s[i - 2]:
+                    ans -= 1
+            ac.st(ans)
+        return
+
+    @staticmethod
     def abc_141e(ac=FastIO()):
         """
         url: https://atcoder.jp/contests/abc141/tasks/abc141_e
@@ -236,7 +275,7 @@ class Solution:
                 return True
             pre = dict()
             for i in range(x - 1, n):
-                cur = sh.query(i - x + 1, i)
+                cur = (sh1.query(i - x + 1, i), sh2.query(i - x + 1, i))
                 if cur in pre:
                     if i - pre[cur] >= x:
                         return True
@@ -246,8 +285,10 @@ class Solution:
 
         n = ac.read_int()
         s = ac.read_str()
-        sh = StringHash(n, s)
-        ac.st(BinarySearch().find_int_right(0, n, check))
+        sh1 = StringHash([ord(w) - ord("a") for w in s])
+        sh2 = StringHash([ord(w) - ord("a") for w in s])
+        ans = BinarySearch().find_int_right(0, n, check)
+        ac.st(ans)
         return
 
     @staticmethod
@@ -292,74 +333,27 @@ class Solution:
         return
 
     @staticmethod
-    def ac_156(ac=FastIO()):
+    def ac_158(ac=FastIO()):
         """
         url: https://www.acwing.com/problem/content/description/158/
         tag: matrix_hash
         """
-        # 二维matrix_hash查找子矩阵是否存在
         m, n, a, b = ac.read_list_ints()
-        grid = [ac.read_str() for _ in range(m)]
-
-        # 双hash防止碰撞
-        p1 = random.randint(26, 100)
-        p2 = random.randint(26, 100)
-        mod1 = random.randint(10 ** 9 + 7, 2 ** 31 - 1)
-        mod2 = random.randint(10 ** 9 + 7, 2 ** 31 - 1)
-
-        def check(p, mod):
-
-            # 先列从左到右，按行从上到下
-            col = [[0] * n for _ in range(m + 1)]
-            for i in range(m):
-                for j in range(n):
-                    col[i + 1][j] = (col[i][j] * p + int(grid[i][j])) % mod
-
-            # 当前点往列向上 a 长度的hash值
-            pa = pow(p % mod, a, mod)
-            for j in range(n):
-                for i in range(m - 1, a - 2, -1):
-                    col[i + 1][j] = (col[i + 1][j] - col[i - a + 1][j] * pa) % mod
-
-            # 每一个形状为 a*b 的子matrix_hash值
-            pre = set()
-            pab = pow(pa, b, mod)  # 注意此时的模数
-            for i in range(a - 1, m):
-                lst = [0]
-                x = 0
-                for j in range(n):
-                    x *= pa
-                    x += col[i + 1][j]
-                    x %= mod
-                    lst.append(x)
-                    if j >= b - 1:
-                        # 向左 b 长度的hash值
-                        cur = (lst[j + 1] - (lst[j - b + 1] % mod) * pab) % mod
-                        pre.add(cur)
-            return pre
-
-        def check_read(p, mod):
-            # 先列从左到右，按行从上到下
-            y = 0
-            for j in range(b):
-                for i in range(a):
-                    y *= p
-                    y += int(grid[i][j])
-                    y %= mod
-            # 形式为 [[p^3, p^1], [p^2, p^0]]
-            return y
-
-        pre1 = check(p1, mod1)
-        pre2 = check(p2, mod2)
+        grid = []
+        for _ in range(n):
+            grid.extend([int(w) for w in ac.read_str()])
+        mh = MatrixHash(m, n, grid)
+        pre = set()
+        for i in range(a - 1, m):
+            for j in range(b - 1, n):
+                pre.add(mh.query_sub(i, j, a, b))
 
         for _ in range(ac.read_int()):
-            grid = [ac.read_str() for _ in range(a)]
-            y1 = check_read(p1, mod1)
-            y2 = check_read(p2, mod2)
-            if y1 in pre1 and y2 in pre2:
-                ac.st(1)
-            else:
-                ac.st(0)
+            mat = []
+            for _ in range(a):
+                mat.extend([int(w) for w in ac.read_str()])
+            cur = mh.query_matrix(a, b, mat)
+            ac.st(1 if cur in pre else 0)
         return
 
     @staticmethod
@@ -416,15 +410,19 @@ class Solution:
 
     @staticmethod
     def lc_2851(s: str, t: str, k: int) -> int:
-        # KMP与fast_power|转移，也可string_hash（超时）
+        """
+        url: https://leetcode.cn/problems/string-transformation/
+        tag: string_hash|kmp|matrix_dp|matrix_fast_power
+        """
         mod = 10 ** 9 + 7
         n = len(s)
-        sh = StringHash(3 * n + 1, t + "#" + s + s)
-        target = sh.query(0, n - 1)
-        p = sum(sh.query(i - n + 1, i) == target for i in range(2 * n, 3 * n))
+        sh1 = StringHash([ord(w) - ord("a") for w in t] + [26] + [ord(w) - ord("a") for w in s + s])
+        sh2 = StringHash([ord(w) - ord("a") for w in t] + [26] + [ord(w) - ord("a") for w in s + s])
+        target = (sh1.query(0, n - 1), sh2.query(0, n - 1))
+        p = sum((sh1.query(i - n + 1, i), sh2.query(0, n - 1)) == target for i in range(2 * n, 3 * n))
         q = n - p
         mat = [[p - 1, p], [q, q - 1]]
-        vec = [1, 0] if sh.query(n + 1, 2 * n) == target else [0, 1]
+        vec = [1, 0] if (sh1.query(n + 1, 2 * n), sh2.query(n + 1, 2 * n)) == target else [0, 1]
         res = MatrixFastPower().matrix_pow(mat, k, mod)
         ans = vec[0] * res[0][0] + vec[1] * res[0][1]
         return ans % mod
@@ -435,18 +433,21 @@ class Solution:
         url: https://www.luogu.com.cn/problem/P2852
         tag: binary_search|suffix_array|height|monotonic_queue|string_hash
         """
+
         def check(x):
             pre = defaultdict(int)
             for i in range(n):
                 if i >= x - 1:
-                    pre[sh.query(i - x + 1, i)] += 1
+                    pre[(sh1.query(i - x + 1, i), sh2.query(i - x + 1, i))] += 1
             return max(pre.values()) >= k
 
         n, k = ac.read_list_ints()
         nums = [ac.read_int() for _ in range(n)]
-        sh = StringHash(n, nums)
+        sh1 = StringHash(nums)
+        sh2 = StringHash(nums)
         ans = BinarySearch().find_int_right(0, n, check)
         ac.st(ans)
+
         return
 
     @staticmethod
@@ -512,87 +513,51 @@ class Solution:
         url: https://www.luogu.com.cn/problem/P6739
         tag: prefix_suffix|string_hash
         """
-        # prefix_suffixstring_hash
         n = ac.read_int()
         s = ac.read_str()
-        sth = StringHash(n, s)
+        if n % 2 == 0:
+            ac.st("NOT POSSIBLE")
+            return
+
+        sh1 = StringHash([ord(w) - ord("a") for w in s])
+        sh2 = StringHash([ord(w) - ord("a") for w in s])
 
         ans = dict()
         for i in range(n):
             if len(ans) > 1:
                 break
             if i < n // 2:
-                ss = sth.query(0, i - 1)
-                tt = sth.query(i + 1, n // 2)
-                pp = [(ss[j] * sth.pp[j][n // 2 - i] + tt[j]) % sth.mod[j] for j in range(2)]
+                ss = (sh1.query(0, i - 1), sh2.query(0, i - 1))
+                tt = (sh1.query(i + 1, n // 2), sh2.query(i + 1, n // 2))
+                a = (ss[0] * sh1.pp[n // 2 - i] + tt[0]) % sh1.mod
+                b = (ss[1] * sh2.pp[n // 2 - i] + tt[1]) % sh2.mod
 
-                rr = sth.query(n // 2 + 1, n - 1)
-                if pp == rr:
-                    ans[tuple(pp)] = i
+                if sh1.query(n // 2 + 1, n - 1) == a and sh2.query(n // 2 + 1, n - 1) == b:
+                    ans[(a, b)] = i
 
             elif i == n // 2:
-                pp = sth.query(0, n // 2 - 1)
-                rr = sth.query(n // 2 + 1, n - 1)
-                if pp == rr:
-                    ans[tuple(pp)] = i
+                a, b = sh1.query(0, n // 2 - 1), sh2.query(0, n // 2 - 1)
+                if sh1.query(n // 2 + 1, n - 1) == a and sh2.query(n // 2 + 1, n - 1) == b:
+                    ans[(a, b)] = i
             else:
-                pp = sth.query(0, n // 2 - 1)
+                ss = (sh1.query(n // 2, i - 1), sh2.query(n // 2, i - 1))
+                tt = (sh1.query(i + 1, n - 1), sh2.query(i + 1, n - 1))
+                a = (ss[0] * sh1.pp[n - 1 - i] + tt[0]) % sh1.mod
+                b = (ss[1] * sh2.pp[n - 1 - i] + tt[1]) % sh2.mod
 
-                ss = sth.query(n // 2, i - 1)
-                tt = sth.query(i + 1, n - 1)
-                rr = [(ss[j] * sth.pp[j][n - 1 - i] + tt[j]) % sth.mod[j] for j in range(2)]
-                if pp == rr:
-                    ans[tuple(pp)] = i
+                if sh1.query(0, n // 2 - 1) == a and sh2.query(0, n // 2 - 1) == b:
+                    ans[(a, b)] = i
         if not ans:
             ac.st("NOT POSSIBLE")
         elif len(ans) > 1:
             ac.st("NOT UNIQUE")
         else:
             i = list(ans.values())[0]
-            ac.st((s[:i] + s[i + 1:])[:n // 2])
+            if i >= n // 2:
+                ac.st(s[:n // 2])
+            elif i < n // 2:
+                ac.st(s[-(n // 2):])
         return
-
-    @staticmethod
-    def lc_1554(lst: List[str]) -> bool:
-        """
-        url: https://leetcode.cn/problems/strings-differ-by-one-character/
-        tag: prefix_suffix|hash
-        """
-        # 字符串prefix_suffixhash求解
-        m = len(lst[0])
-        p = [random.randint(26, 100), random.randint(26, 100)]
-        mod = [random.randint(10 ** 9 + 7, 2 ** 31 - 1), random.randint(10 ** 9 + 7, 2 ** 31 - 1)]
-
-        pre_hash = []
-        post_hash = []
-        for s in lst:
-            pre = [[0], [0]]
-            pp = [[1], [1]]
-            for w in s:
-                for i in range(2):
-                    pre[i].append((pre[i][-1] * p[i] + ord(w) - ord("a")) % mod[i])
-                    pp[i].append((pp[i][-1] * p[i]) % mod[i])
-            pre_hash.append(pre[:])
-
-            pre = [[0], [0]]
-            pp = [[1], [1]]
-            for w in s[::-1]:
-                for i in range(2):
-                    pre[i].append((pre[i][-1] * p[i] + ord(w) - ord("a")) % mod[i])
-                    pp[i].append((pp[i][-1] * p[i]) % mod[i])
-            post_hash.append([p[::-1] for p in pre])
-
-        n = len(lst)
-        for i in range(m):
-            pre = set()
-            for j in range(n):
-                va = tuple()
-                for k in range(2):
-                    va += tuple([pre_hash[j][k][i]]) + tuple([post_hash[j][k][i + 1]])
-                if va in pre:
-                    return True
-                pre.add(va)
-        return False
 
     @staticmethod
     def lc_1948(paths: List[List[str]]) -> List[List[str]]:
@@ -673,50 +638,23 @@ class Solution:
         return len(ans)
 
     @staticmethod
-    def lc_1104(s: str) -> str:
-        # 利用binary_search|string_hash确定具有最长长度的重复子串
-
-        def compute(x):
-            pre = set()
-            if x == 0:
-                return [0, 0]
-
-            for i in range(x - 1, n):
-                cur = sh.query(i - x + 1, i)
-                if tuple(cur) in pre:
-                    return [i - x + 1, i + 1]
-                pre.add(tuple(cur))
-            return [0, 0]
-
-        def check(x):
-            res = compute(x)
-            return res[1] > 0
-
-        n = len(s)
-        sh = StringHash(n, s)
-        length = BinarySearch().find_int_right(0, n - 1, check)
-        ans = compute(length)
-        return s[ans[0]: ans[1]]
-
-    @staticmethod
     def lc_1316(text: str) -> int:
         """
-        url: https://leetcode.cn/problems/shortest-palindrome/
+        url: https://leetcode.cn/problems/distinct-echo-substrings
         tag: string_hash
         """
-        # string_hash判断循环子串
         n = len(text)
-        sh = StringHash(n, text)
+        sh1 = StringHash([ord(w) - ord("a") for w in text])
+        sh2 = StringHash([ord(w) - ord("a") for w in text])
 
         ans = 0
         for x in range(1, n // 2 + 1):
             cur = set()
             for i in range(n - 2 * x + 1):
-                ans1 = sh.query(i, i + x - 1)
-                ans2 = sh.query(i + x, i + 2 * x - 1)
+                ans1 = (sh1.query(i, i + x - 1), sh2.query(i, i + x - 1))
+                ans2 = (sh1.query(i + x, i + 2 * x - 1), sh2.query(i + x, i + 2 * x - 1))
                 if ans1 == ans2:
-                    # 注意只有长度与hash值相同字符串才相同
-                    cur.add(tuple(ans1))
+                    cur.add(ans1)
             ans += len(cur)
         return ans
 
@@ -726,6 +664,7 @@ class Solution:
         url: https://leetcode.cn/problems/longest-common-subpath/
         tag: binary_search|string_hash
         """
+
         def check(x):
             pre = set()
             ind = 0
@@ -733,7 +672,7 @@ class Solution:
                 m = len(paths[i])
                 cur = set()
                 for j in range(ind, ind + m - x + 1):
-                    cur.add(sh.query(j, j + x - 1))
+                    cur.add((sh1.query(j, j + x - 1), sh2.query(j, j + x - 1)))
                 if not i:
                     pre = cur
                 else:
@@ -746,7 +685,671 @@ class Solution:
         for path in paths:
             lst.extend(path)
         n += 1
-        sh = StringHash(lst)
+        sh1 = StringHash(lst)
+        sh2 = StringHash(lst)
         ans = BinarySearch().find_int_right(0, min(len(p) for p in paths), check)
-
         return ans
+
+    @staticmethod
+    def lg_p3370_1(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P3370
+        tag: string_hash
+        """
+        ans = set()
+        p1, p2 = [random.randint(26, 100), random.randint(26, 100)]
+        mod1, mod2 = [random.randint(10 ** 9 + 7, 2 ** 31 - 1), random.randint(10 ** 9 + 7, 2 ** 31 - 1)]
+        for _ in range(ac.read_int()):
+            s = ac.read_str()
+            x1 = x2 = 0
+            for w in s:
+                x1 = (x1 * p1 + ord(w)) % mod1
+                x2 = (x2 * p2 + ord(w)) % mod2
+            ans.add((x1, x2))
+        ac.st(len(ans))
+        return
+
+    @staticmethod
+    def lg_p3370_2(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P3370
+        tag: string_hash
+        """
+        ans = set()
+        for _ in range(ac.read_int()):
+            ans.add(hash(ac.read_str()))
+        ac.st(len(ans))
+        return
+
+    @staticmethod
+    def cf_514c(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/514/problem/C
+        tag: string_hash
+        """
+
+        n = 6 * 10 ** 5
+        p = [random.randint(26, 100), random.randint(26, 100)]
+        mod = [random.randint(10 ** 9 + 7, 2 ** 31 - 1), random.randint(10 ** 9 + 7, 2 ** 31 - 1)]
+        pre = [[0] * (n + 1), [0] * (n + 1)]
+        pp = [[1] * (n + 1), [1] * (n + 1)]
+        for j in range(n):
+            for i in range(2):
+                pp[i][j + 1] = (pp[i][j] * p[i]) % mod[i]
+
+        def query(x, y):
+            if y < x:
+                return 0, 0
+            res = tuple((pre[i][y + 1] - pre[i][x] * pp[i][y - x + 1]) % mod[i] for i in range(2))
+            return res
+
+        ans = set()
+        n, m = ac.read_list_ints()
+        for _ in range(n):
+            s = ac.read_str()
+            k = len(s)
+            lst = [ord(w) - ord("a") for w in s]
+            for j, w in enumerate(lst):
+                for i in range(2):
+                    pre[i][j + 1] = (pre[i][j] * p[i] + w) % mod[i]
+
+            for i in range(k):
+                ll = query(0, i - 1)
+                rr = query(i + 1, k - 1)
+                for w in range(3):
+                    if w != lst[i]:
+                        cur = [0, 0]
+                        for j in range(2):
+                            cur[j] = ((ll[j] * p[j] + w) * pp[j][k - i - 1] + rr[j]) % mod[j]
+                        ans.add((k, cur[0], cur[1]))
+
+        for _ in range(m):
+            s = ac.read_str()
+            k = len(s)
+            lst = [ord(w) - ord("a") for w in s]
+            cur = [0, 0]
+            for j, w in enumerate(lst):
+                for i in range(2):
+                    cur[i] = (cur[i] * p[i] + w) % mod[i]
+            ac.st("YES" if (k, cur[0], cur[1]) in ans else "NO")
+        return
+
+    @staticmethod
+    def cf_1200e(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1200/problem/E
+        tag: string_hash|kmp
+        """
+        ac.read_int()
+        lst = ac.read_list_strs()
+        n = sum(len(s) for s in lst)
+        p = [random.randint(26, 100), random.randint(26, 100)]
+        mod = [random.randint(10 ** 9 + 7, 2 ** 31 - 1), random.randint(10 ** 9 + 7, 2 ** 31 - 1)]
+        pre = [[0] * (n + 1), [0] * (n + 1)]
+        pp = [[1] * (n + 1), [1] * (n + 1)]
+        for j in range(n):
+            for i in range(2):
+                pp[i][j + 1] = (pp[i][j] * p[i]) % mod[i]
+
+        def query1(x, y):
+            if y < x:
+                return 0, 0
+            res = tuple((pre[ii][y + 1] - pre[ii][x] * pp[ii][y - x + 1]) % mod[ii] for ii in range(2))
+            return res
+
+        def query2(x, y):
+            if y < x:
+                return 0, 0
+            res = tuple((cur[ii][y + 1] - cur[ii][x] * pp[ii][y - x + 1]) % mod[ii] for ii in range(2))
+            return res
+
+        ans = []
+        k = 0
+        for word in lst:
+            m = len(word)
+            cur = [[0] * (m + 1), [0] * (m + 1)]
+            inter = 0
+            for j, w in enumerate(word):
+                for i in range(2):
+                    cur[i][j + 1] = (cur[i][j] * p[i] + ord(w)) % mod[i]
+                if query1(k - j - 1, k - 1) == query2(0, j):
+                    inter = j + 1
+            for j in range(inter, m):
+                w = word[j]
+                ans.append(w)
+                for i in range(2):
+                    pre[i][k + 1] = (pre[i][k] * p[i] + ord(w)) % mod[i]
+                k += 1
+        ac.st("".join(ans))
+        return
+
+    @staticmethod
+    def lc_1044(s: str) -> str:
+        """
+        url: https://leetcode.cn/problems/longest-duplicate-substring/
+        tag: suffix_array|height|classical|string_hash
+        """
+        sh1 = StringHash([ord(w) - ord("a") for w in s])
+        sh2 = StringHash([ord(w) - ord("a") for w in s])
+        n = len(s)
+
+        def check(x):
+            return compute(x) > -1
+
+        def compute(x):
+            pre = set()
+            for ii in range(n - x + 1):
+                cur1, cur2 = sh1.query(ii, ii + x - 1), sh2.query(ii, ii + x - 1)
+                if (cur1, cur2) in pre:
+                    return ii
+                pre.add((cur1, cur2))
+            return -1
+
+        length = BinarySearch().find_int_right(0, n, check)
+        if length == 0:
+            return ""
+        i = compute(length)
+        return s[i:i + length]
+
+    @staticmethod
+    def lc_1554(words: List[str]) -> bool:
+        """
+        url: https://leetcode.cn/problems/strings-differ-by-one-character/
+        tag: string_hash|trie
+        """
+        pre = set()
+        m = len(words[0])
+        sh1 = StringHash([0] * m)
+        sh2 = StringHash([0] * m)
+        for word in words:
+            lst = [ord(w) - ord("a") for w in word]
+            for j, w in enumerate(lst):
+                sh1.pre[j + 1] = (sh1.pre[j] * sh1.p + w) % sh1.mod
+                sh2.pre[j + 1] = (sh2.pre[j] * sh2.p + w) % sh2.mod
+
+            for j in range(m):
+                ll = sh1.query(0, j - 1)
+                rr = sh1.query(j + 1, m - 1)
+                cur1 = ((ll * sh1.p + 26) * sh1.pp[m - j - 1] + rr) % sh1.mod
+
+                ll = sh2.query(0, j - 1)
+                rr = sh2.query(j + 1, m - 1)
+                cur2 = ((ll * sh2.p + 26) * sh2.pp[m - j - 1] + rr) % sh2.mod
+
+                if (cur1, cur2) in pre:
+                    return True
+                pre.add((cur1, cur2))
+        return False
+
+    @staticmethod
+    def lc_2156(s: str, p: int, modulo: int, k: int, hash_value: int) -> str:
+        """
+        url: https://leetcode.cn/problems/find-substring-with-given-hash-value
+        tag: string_hash|reverse_order
+        """
+        ans = -1
+        n = len(s)
+        pp = pow(p, k - 1, modulo)
+        post = 0
+        for i in range(n - 1, -1, -1):
+            post = post * p + ord(s[i]) - ord("a") + 1
+            post %= modulo
+            if post == hash_value and i + k - 1 <= n - 1:
+                ans = i
+            if i + k - 1 <= n - 1:
+                post -= (ord(s[i + k - 1]) - ord("a") + 1) * pp
+                post %= modulo
+        return s[ans: ans + k]
+
+    @staticmethod
+    def library_check_1(ac=FastIO()):
+        """
+        url: https://ac.nowcoder.com/acm/contest/64384/D
+        tag: string_hash|implemention
+        """
+        n, m, k = ac.read_list_ints()
+        s = ac.read_str()
+        sh1 = StringHash([int(w) for w in s])
+        sh2 = StringHash([int(w) for w in s])
+        ind = defaultdict(list)
+        for i in range(m - 1, n):
+            cur = (sh1.query(i - m + 1, i), sh2.query(i - m + 1, i))
+            ind[cur].append(i)
+        ans = 0
+        for lst in ind.values():
+            cur = 0
+            pre = -m
+            for i in lst:
+                if i - pre >= m:
+                    cur += 1
+                    pre = i
+            ans += cur == k
+        ac.st(ans)
+        return
+
+    @staticmethod
+    def cf_452f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/452/problem/F
+        tag: segment_tree_hash|string_hash|point_set|range_hash|range_reverse
+        """
+        n = ac.read_int()
+        tree1 = PointSetRangeHashReverse(n)
+        tree2 = PointSetRangeHashReverse(n)
+        nums = ac.read_list_ints_minus_one()
+        for num in nums:
+            tree1.point_set(num, num, 1)
+            tree2.point_set(num, num, 1)
+            if num == 0 or num == n - 1:
+                continue
+            length = ac.min(num + 1, n - num)
+            cur1 = [tree1.range_hash(num - length + 1, num), tree2.range_hash(num - length + 1, num)]
+            cur2 = [tree1.range_hash_reverse(num, num + length - 1), tree2.range_hash_reverse(num, num + length - 1)]
+            if cur1 != cur2:
+                ac.st("YES")
+                break
+        else:
+            ac.st("NO")
+        return
+
+    @staticmethod
+    def cf_580e(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/580/problem/E
+        tag: segment_tree_hash|range_change|range_hash_reverse|circular_section
+        """
+        n, m, k = ac.read_list_ints()
+        tree1 = RangeSetRangeHashReverse(n, 10)
+        tree2 = RangeSetRangeHashReverse(n, 10)
+        s = ac.read_str()
+        tree1.build([int(w) for w in s])
+        tree2.build([int(w) for w in s])
+        for _ in range(m + k):
+            lst = ac.read_list_ints()
+            if lst[0] == 1:
+                l, r, c = lst[1:]
+                tree1.range_set(l - 1, r - 1, c)
+                tree2.range_set(l - 1, r - 1, c)
+            else:
+                l, r, d = lst[1:]
+                if d == r - l + 1:
+                    ac.st("YES")
+                    continue
+                else:
+                    if tree1.range_hash(l - 1, r - d - 1) == tree1.range_hash(l + d - 1, r - 1):
+                        if tree2.range_hash(l - 1, r - d - 1) == tree2.range_hash(l + d - 1, r - 1):
+                            ac.st("YES")
+                        else:
+                            ac.st("NO")
+                    else:
+                        ac.st("NO")
+        return
+
+    @staticmethod
+    def lc_2977(source: str, target: str, original: List[str], changed: List[str], cost: List[int]) -> int:
+
+        """
+        url: https://leetcode.cn/problems/minimum-cost-to-convert-string-ii
+        tag: string_hash|dp|dijkstra|trie
+        """
+
+        sh1 = StringHash([ord(w) - ord("a") for w in source + target])
+        sh2 = StringHash([ord(w) - ord("a") for w in source + target])
+
+        has = dict()
+
+        nodes = set(original + changed)
+        for string in nodes:
+            lst = [len(string)]
+
+            p, mod = sh1.p, sh1.mod
+            state = 0
+            for w in string:
+                state *= p
+                state += ord(w) - ord("a")
+                state %= mod
+            lst.append(state)
+
+            p, mod = sh2.p, sh2.mod
+            state = 0
+            for w in string:
+                state *= p
+                state += ord(w) - ord("a")
+                state %= mod
+            lst.append(state)
+
+            has[tuple(lst)] = string
+
+        ind = {x: i for i, x in enumerate(nodes)}
+        m = len(ind)
+        dct = [[] for _ in range(m)]
+        for x, y, z in zip(original, changed, cost):
+            x = ind[x]
+            y = ind[y]
+            dct[x].append([y, z])
+        dis = []
+        for x in range(m):
+            dis.append(Dijkstra().get_shortest_path(dct, x))
+
+        n = len(source)
+        dp = [inf] * (n + 1)
+
+        exist = defaultdict(list)
+        for s in original:
+            exist[s[-1]].append(s)
+
+        dp[0] = 0
+        for i in range(n):
+            if source[i] == target[i]:
+                dp[i + 1] = dp[i]
+            for w in exist[source[i]]:
+                j = i - len(w) + 1
+                s1 = (i - j + 1, sh1.query(j, i), sh2.query(j, i))
+                t1 = (i - j + 1, sh1.query(j + n, i + n), sh2.query(j + n, i + n))
+                if s1 in has and t1 in has:
+                    x, y = ind[has[s1]], ind[has[t1]]
+                    z = dis[x][y]
+                    if dp[j] + z < dp[i + 1]:
+                        dp[i + 1] = dp[j] + z
+
+        return dp[-1] if dp[-1] < inf else -1
+
+    @staticmethod
+    def ac_139(ac=FastIO()):
+        """
+        url: https://www.acwing.com/problem/content/139/
+        tag: matrix_hash
+        """
+        p1 = random.randint(26, 100)
+        p2 = random.randint(26, 100)
+        mod1 = random.randint(10 ** 9 + 7, 2 ** 31 - 1)
+        mod2 = random.randint(10 ** 9 + 7, 2 ** 31 - 1)
+
+        def compute(ls):
+            res1 = 0
+            for num in ls:
+                res1 *= p1
+                res1 += num
+                res1 %= mod1
+            res2 = 0
+            for num in ls:
+                res2 *= p2
+                res2 += num
+                res2 %= mod2
+            return res1, res2
+
+        def check():
+            res = []
+            for ii in range(6):
+                cu = tuple(lst[ii:] + lst[:ii])
+                res.append(compute(cu))
+                cu = tuple(lst[:ii + 1][::-1] + lst[ii + 1:][::-1])
+                res.append(compute(cu))
+            return res
+
+        n = ac.read_int()
+        pre = set()
+        for _ in range(n):
+            lst = ac.read_list_ints()
+            now = check()
+            if any(cur in pre for cur in now):
+                ac.st("Twin snowflakes found.")
+                break
+            for cur in now:
+                pre.add(cur)
+        else:
+            ac.st("No two snowflakes are alike.")
+        return
+
+    @staticmethod
+    def library_check_2(ac=FastIO()):
+
+        """
+        url: https://www.luogu.com.cn/problem/UVA11019
+        tag: matrix_hash|string_hash
+        """
+        for _ in range(ac.read_int()):  # TLE
+            m, n = ac.read_list_ints()
+            grid = []
+            for _ in range(n):
+                grid.extend([ord(w) - ord("a") for w in ac.read_str()])
+
+            mh = MatrixHash(m, n, grid)
+            a, b = ac.read_list_ints()
+            mat = []
+            for _ in range(a):
+                mat.extend([ord(w) - ord("a") for w in ac.read_str()])
+            cur = mh.query_matrix(a, b, mat)
+            ans = 0
+            for i in range(a - 1, n):
+                for j in range(b - 1, m):
+                    if mh.query_sub(i, j, a, b) == cur:
+                        ans += 1
+            ac.st(ans)
+        return
+
+    @staticmethod
+    def library_check_3(ac=FastIO()):
+        """
+        url: https://ac.nowcoder.com/acm/problem/51003
+        tag: matrix_hash|string_hash
+        """
+
+        m, n, a, b = ac.read_list_ints()
+        grid = []
+        for _ in range(n):
+            grid.extend([int(w) for w in ac.read_str()])
+        mh = MatrixHash(m, n, grid)
+        pre = set()
+        for i in range(a - 1, m):
+            for j in range(b - 1, n):
+                pre.add(mh.query_sub(i, j, a, b))
+
+        for _ in range(ac.read_int()):
+            mat = []
+            for _ in range(a):
+                mat.extend([int(w) for w in ac.read_str()])
+            cur = mh.query_matrix(a, b, mat)
+            ac.st(1 if cur in pre else 0)
+        return
+
+    @staticmethod
+    def lg_p2601(ac=FastIO()):
+
+        """
+        url: https://www.luogu.com.cn/problem/P2601
+        tag: matrix_hash|string_hash
+        """
+        m, n = ac.read_list_ints()
+        lst = []
+        for _ in range(m):
+            lst.extend(ac.read_list_ints())
+        mh = MatrixHashReverse(m, n, lst)
+
+        def check1(x):
+
+            res1 = mh.query_left_up(i + x - 1, j + x - 1, 2 * x - 1, 2 * x - 1)
+            res2 = mh.query_right_up(i + x - 1, j - x + 1, 2 * x - 1, 2 * x - 1)
+            res3 = mh.query_left_down(i - x + 1, j + x - 1, 2 * x - 1, 2 * x - 1)
+            res4 = mh.query_right_down(i - x + 1, j - x + 1, 2 * x - 1, 2 * x - 1)
+            return res1 == res2 == res3 == res4
+
+        def check2(x):
+
+            res1 = mh.query_left_up(i + x, j + x, 2 * x, 2 * x)
+            res2 = mh.query_right_up(i + x, j - x + 1, 2 * x, 2 * x)
+            res3 = mh.query_left_down(i - x + 1, j + x, 2 * x, 2 * x)
+            res4 = mh.query_right_down(i - x + 1, j - x + 1, 2 * x, 2 * x)
+            return res1 == res2 == res3 == res4
+
+        bs = BinarySearch()
+        ans = i = j = 0
+
+        for i in range(m):
+            for j in range(n):
+                y = min(i + 1, m - i, j + 1, n - j)
+                ans += bs.find_int_right(0, y, check1)
+                y = min(i + 1, j + 1, m - i - 1, n - j - 1)
+                ans += bs.find_int_right(0, y, check2)
+        ac.st(ans)
+        return
+
+    @staticmethod
+    def lg_p4824(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P4824
+        tag: string_hash|stack|implemention
+        """
+
+        s = ac.read_str()
+        t = ac.read_str()
+        m, n = len(s), len(t)
+        sh = StringHash([ord(w) - ord("a") for w in s + t])
+        del t
+        target = sh.query(m, m + n - 1)
+        i = 0
+        stack = []
+        for w in s:
+            x = ord(w) - ord("a")
+            stack.append(w)
+            sh.pre[i + 1] = (sh.pre[i] * sh.p + x) % sh.mod
+            i += 1
+            if i >= n and sh.query(i - n, i - 1) == target:
+                i -= n
+                for _ in range(n):
+                    stack.pop()
+        ac.st("".join(stack))
+        return
+
+    @staticmethod
+    def lg_p4503(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P4503
+        tag: string_hash
+        """
+
+        ind = dict()
+        words = []
+        for i in range(10):
+            ind[str(i)] = i
+            words.append(str(i))
+        for i in range(26):
+            ind[chr(i + ord("a"))] = 10 + i
+            words.append(chr(i + ord("a")))
+        for i in range(26):
+            ind[chr(i + ord("A"))] = 36 + i
+            words.append(chr(i + ord("A")))
+        ind["_"] = 62
+        ind["@"] = 63
+        words.extend(["_", "@"])
+
+        n, ll, s = ac.read_list_ints()
+        sh1 = StringHash([0] * ll)
+        sh2 = StringHash([0] * ll)
+        cnt = dict()
+        ans = 0
+        for _ in range(n):
+            st = [ind[w] + 1 for w in ac.read_str()]
+            for j in range(ll):
+                sh1.pre[j + 1] = (sh1.pre[j] * sh1.p + st[j]) % sh1.mod
+                sh2.pre[j + 1] = (sh2.pre[j] * sh2.p + st[j]) % sh2.mod
+            for j in range(ll):
+                pre1 = sh1.pre[j]
+                post1 = sh1.query(j + 1, ll - 1)
+                pre2 = sh2.pre[j]
+                post2 = sh2.query(j + 1, ll - 1)
+                right = ll - j - 1
+                cur1 = (pre1 * sh1.pp[right + 1] + post1) % sh1.mod
+                cur2 = (pre2 * sh2.pp[right + 1] + post2) % sh2.mod
+                ans += cnt.get((cur1, cur2), 0)
+                cnt[(cur1, cur2)] = cnt.get((cur1, cur2), 0) + 1
+        ac.st(ans)
+        return
+
+    @staticmethod
+    def lg_p3538(ac=FastIO()):
+        """
+        url: https://www.luogu.com.cn/problem/P3538
+        tag: string_hash|prime_factor|brute_force|circular_section
+        """
+        n = ac.read_int()
+        lst = [ord(w) - ord("a") for w in ac.read_str()]
+        sh1 = StringHash(lst)
+        sh2 = StringHash(lst)
+
+        def check(cur):
+            pre1 = sh1.query(a, b - cur)
+            post1 = sh1.query(a + cur, b)
+
+            pre2 = sh2.query(a, b - cur)
+            post2 = sh2.query(a + cur, b)
+            return pre1 == post1 and pre2 == post2
+
+        pf = PrimeFactor(n)
+        for _ in range(ac.read_int()):
+            a, b = ac.read_list_ints_minus_one()
+            length = b - a + 1
+            ans = length
+            while length > 1:
+                p = pf.min_prime[length]
+                if check(ans // p):
+                    ans //= p
+                length //= p
+            ac.st(ans)
+        return
+
+    @staticmethod
+    def cf_7d(ac=FastIO()):
+        """
+        url: https://codeforces.com/problemset/problem/7/D
+        tag: string_hash|palindrome|classical
+        """
+        p = 131
+        mod = 10 ** 9 + 7
+        s = ac.read_str()
+        n = len(s)
+        pre = rev = 0
+        pp = 1
+        dp = [0] * (n + 1)
+        for i in range(n):
+            x = ord(s[i]) - ord("a")
+            pre = (pre * p + x) % mod
+            rev = (x * pp + rev) % mod
+            pp = (pp * p) % mod
+            if pre != rev:
+                continue
+            dp[i + 1] = dp[(i + 1) // 2] + 1
+        ac.st(sum(dp))
+        return
+
+    @staticmethod
+    def cf_835d(ac=FastIO()):
+        """
+        url: https://codeforces.com/problemset/problem/835/D
+        tag: palindrome|string_hash
+        """
+        s = ac.read_str()
+        lst = [ord(w) - ord("a") for w in s]
+        n = len(s)
+        dp = [0] * (n + 1)
+        ans = [0] * (n + 1)
+        p = 131
+        mod = 10 ** 9 + 7
+        for i in range(n):
+            dp[i] = 1
+            pp = p
+            pre = rev = lst[i]
+            ans[1] += 1
+            for j in range(i + 1, n):
+                pre = (pre * p + lst[j]) % mod
+                rev = (lst[j] * pp + rev) % mod
+                pp = (pp * p) % mod
+                if pre == rev:
+                    dp[j] = dp[i + (j - i + 1) // 2 - 1] + 1
+                    ans[dp[j]] += 1
+                else:
+                    dp[j] = 0
+        for i in range(n - 1, -1, -1):
+            ans[i] += ans[i + 1]
+        ac.lst(ans[1:])
+        return

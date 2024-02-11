@@ -65,24 +65,28 @@ P8782（https://www.luogu.com.cn/problem/P8782）base|greedy|classical
 1744E2（https://codeforces.com/contest/1744/problem/E2）brute_force|factorization
 1612D（https://codeforces.com/contest/1612/problem/D）gcd_like
 1920C（https://codeforces.com/contest/1920/problem/C）brute_force|num_factor|gcd_like
+1029F（https://codeforces.com/contest/1029/problem/F）num_factor|brute_force|greedy
+1154G（https://codeforces.com/contest/1154/problem/G）num_factor|brute_force|greedy|brain_teaser|classical|minimum_lcm_pair
+1360H（https://codeforces.com/contest/1360/problem/H）n-base
 
 ====================================AtCoder=====================================
 ABC114D（https://atcoder.jp/contests/abc114/tasks/abc114_d）prime_factorization|counter
 ABC134D（https://atcoder.jp/contests/abc134/tasks/abc134_d）reverse_thinking|construction
+ABC337E（https://atcoder.jp/contests/abc337/tasks/abc337_e）n-base|classical
 
 =====================================AcWing=====================================
-97（https://www.acwing.com/problem/content/99/）a^b|math|factorization
-124（https://www.acwing.com/problem/content/126/）base
-196（https://www.acwing.com/problem/content/198/）counter
-198（https://www.acwing.com/problem/content/200/）anti_prime_number
-199（https://www.acwing.com/problem/content/description/201/）brute_force
-3727（https://www.acwing.com/solution/content/54479/）brain_teaser|base
-3999（https://www.acwing.com/problem/content/description/4002/）CF1295D
-4319（https://www.acwing.com/problem/content/4322/）prime_factorization|prefix_hash|counter
-4484（https://www.acwing.com/problem/content/4487/）base
-4486（https://www.acwing.com/problem/content/description/4489/）prime_factorization|greedy
-4622（https://www.acwing.com/problem/content/description/4625/）brain_teaser|greedy|construction
-5049（https://www.acwing.com/problem/content/description/5052/）prime_factorization|comb
+99（https://www.acwing.com/problem/content/99/）a^b|math|factorization
+126（https://www.acwing.com/problem/content/126/）base
+198（https://www.acwing.com/problem/content/198/）counter
+200（https://www.acwing.com/problem/content/200/）anti_prime_number
+201（https://www.acwing.com/problem/content/description/201/）brute_force
+3730（https://www.acwing.com/problem/content/description/3730/）brain_teaser|base
+4002（https://www.acwing.com/problem/content/description/4002/）CF1295D
+4322（https://www.acwing.com/problem/content/4322/）prime_factorization|prefix_hash|counter
+4487（https://www.acwing.com/problem/content/4487/）base
+4489（https://www.acwing.com/problem/content/description/4489/）prime_factorization|greedy
+4625（https://www.acwing.com/problem/content/description/4625/）brain_teaser|greedy|construction
+5052（https://www.acwing.com/problem/content/description/5052/）prime_factorization|comb
 
 
 """
@@ -91,10 +95,11 @@ from collections import Counter
 from collections import defaultdict
 from functools import reduce
 from operator import mul
+from sys import stdout
 from typing import List
 
 from src.mathmatics.gcd_like.template import GcdLike
-from src.mathmatics.number_theory.template import EulerPhi, NumFactor, PrimeSieve, NumTheory, PrimeJudge
+from src.mathmatics.number_theory.template import EulerPhi, NumFactor, PrimeSieve, NumTheory, PrimeJudge, NumBase
 from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
@@ -582,7 +587,6 @@ class Solution:
         tag: negative_base|classical
         """
 
-        # 负进制题
         def check(tmp):
             res = 0
             for num in tmp:
@@ -590,15 +594,14 @@ class Solution:
             return res
 
         ans = check(arr1) + check(arr2)
-        return NumberTheory().get_k_bin_of_n(ans, -2)
+        return NumBase().get_k_bin_of_n(ans, -2)
 
     @staticmethod
-    def ac_3727(ac=FastIO()):
+    def ac_3730(ac=FastIO()):
         """
-        url: https://www.acwing.com/solution/content/54479/
+        url: https://www.acwing.com/problem/content/description/3730/
         tag: brain_teaser|base
         """
-        # brain_teaser转换成进制表达问题
 
         for _ in range(ac.read_int()):
             def check():
@@ -625,9 +628,9 @@ class Solution:
     def ac_4484(ac=FastIO()):
         """
         url: https://www.acwing.com/problem/content/4487/
-        tag: base
+        tag: n-base
         """
-        # 分数在某个进制下是否为有限小数问题
+
         for _ in range(ac.read_int()):
 
             def check():
@@ -637,7 +640,6 @@ class Solution:
                     if gg == 1:
                         break
                     q //= gg
-
                 return q == 1
 
             p, q, b = ac.read_list_ints()
@@ -654,13 +656,13 @@ class Solution:
         url: https://www.acwing.com/problem/content/description/4489/
         tag: prime_factorization|greedy
         """
-        # prime_factorization|greedy题
+
         n = ac.read_int()
         if n == 1:
             ac.lst([1, 0])
             return
 
-        res = NumberTheory().get_prime_factor(n)
+        res = NumFactor().get_prime_factor(n)
 
         ans = 1
         x = 0
@@ -686,18 +688,17 @@ class Solution:
         url: https://www.acwing.com/problem/content/description/4625/
         tag: brain_teaser|greedy|construction
         """
-        # brain_teaser|greedyconstruction
+
         n = ac.read_int()
         if n < 4:
             ac.st(1)
         elif n % 2 == 0:
             ac.st(2)
         else:
-            if NumberTheory().is_prime4(n - 2):
+            if PrimeJudge().is_prime_speed(n - 2):
                 ac.st(2)
             else:
                 ac.st(3)
-
         return
 
     @staticmethod
@@ -794,4 +795,121 @@ class Solution:
                         seen.add(w)
                         ans += gcd != 1
             ac.st(ans)
+        return
+
+    @staticmethod
+    def abc_337e(ac=FastIO()):
+        """
+        url: https://atcoder.jp/contests/abc337/tasks/abc337_e
+        tag: n-base|classical
+        """
+        n = ac.read_int()
+        m = n.bit_length() if n.bit_count() > 1 else n.bit_length() - 1
+
+        dct = [[] for _ in range(m + 1)]
+        for i in range(1, n + 1):
+            for j in range(m):
+                if i & (1 << j):
+                    dct[j + 1].append(i)
+
+        ac.st(m)
+        for ls in dct[1:]:
+            ac.lst([len(ls)] + ls[:])
+        stdout.flush()
+
+        s = ac.read_str()
+        ans = 0
+        for i in range(m):
+            if s[i] == "1":
+                ans |= 1 << i
+        ac.st(ans if ans else n)
+        stdout.flush()
+        return
+
+    @staticmethod
+    def cf_1029f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1029/problem/F
+        tag: num_factor|brute_force|greedy
+        """
+        a, b = ac.read_list_ints()
+        lst_a = NumFactor().get_all_factor(a)
+        lst_b = NumFactor().get_all_factor(b)
+        lst_ab = NumFactor().get_all_factor(a + b)
+        ma = len(lst_a)
+        mb = len(lst_b)
+        ans = 2 * (a + b + 1)
+        i = j = 0
+        pre = a + b + 1
+        for x in lst_ab:
+            y = (a + b) // x
+            while i < ma and lst_a[i] <= x:
+                pre = ac.min(pre, a // lst_a[i])
+                i += 1
+            while j < mb and lst_b[j] <= x:
+                pre = ac.min(pre, b // lst_b[j])
+                j += 1
+            if pre <= y and 2 * (x + y) < ans:
+                ans = 2 * (x + y)
+        ac.st(ans)
+        return
+
+    @staticmethod
+    def cf_1154g(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1154/problem/G
+        tag: num_factor|brute_force|greedy|brain_teaser|classical|minimum_lcm_pair
+        """
+        ac.read_int()
+        nums = ac.read_list_ints()
+        m = 10 ** 7 + 1
+        cnt = [-2] * m
+        ans = []
+        res = 10 ** 14 + 1
+        for num in nums:
+            if cnt[num] == -1:
+                if num < res:
+                    res = num
+                    ans = [num, num]
+            else:
+                cnt[num] = -1
+
+        arr = sorted(set(nums))
+        k = len(arr)
+        for i, num in enumerate(arr):
+            cnt[num] = i
+
+        if k > 1:
+            cur = arr[0] * arr[1] // math.gcd(arr[0], arr[1])
+            if cur < res:
+                ans = [arr[0], arr[1]]
+                res = cur
+
+            for i in range(2, m):
+                lst = []
+                for j in range(i, m, i):
+                    if cnt[j] >= 0:
+                        lst.append(cnt[j])
+                        if len(lst) >= 2:
+                            break
+                if len(lst) == 2:
+                    x, y = lst[0], lst[1]
+                    cur = arr[x] * arr[y] // math.gcd(arr[x], arr[y])
+                    if cur < res:
+                        res = cur
+                        ans = [arr[x], arr[y]]
+                if lst:
+                    if lst[0] == 0:
+                        y = 1
+                    else:
+                        y = 0
+                    x = lst[0]
+                    cur = arr[x] * arr[y] // math.gcd(arr[x], arr[y])
+                    if cur < res:
+                        res = cur
+                        ans = [arr[x], arr[y]]
+        i = nums.index(ans[0])
+        nums[i] = -1
+        j = nums.index(ans[1])
+        ac.lst(sorted([i + 1, j + 1]))
         return

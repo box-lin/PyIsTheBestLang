@@ -14,8 +14,8 @@ class PointAddRangeSum:
 
     def _pre_sum(self, i: int) -> int:
         """index start from 1 and the prefix sum of nums[:i] which is 0-index"""
-        assert 1 <= i <= self.n
-        val = 0
+
+        val = 0  # assert 1 <= i <= self.n
         while i:
             val += self.t[i]
             i -= self._lowest_bit(i)
@@ -23,8 +23,7 @@ class PointAddRangeSum:
 
     def build(self, nums) -> None:
         """initialize the tree array"""
-        assert len(nums) == self.n
-        pre = [0] * (self.n + 1)
+        pre = [0] * (self.n + 1)  # assert len(nums) == self.n
         for i in range(self.n):
             pre[i + 1] = pre[i] + nums[i]
             # meaning of self.t[i+1]
@@ -40,17 +39,27 @@ class PointAddRangeSum:
 
     def point_add(self, i: int, val: int) -> None:
         """index start from 1 and the value val can be any inter including positive and negative number"""
-        assert 1 <= i <= self.n
-        while i < len(self.t):
+        while i < len(self.t):  # assert 1 <= i <= self.n
             self.t[i] += val
             i += self._lowest_bit(i)
         return
 
     def range_sum(self, x: int, y: int) -> int:
         """index start from 1 and the range sum of nums[x-1:y]  which is 0-index"""
-        assert 1 <= x <= y <= self.n
-        res = self._pre_sum(y) - self._pre_sum(x - 1) if x > 1 else self._pre_sum(y)
+        res = self._pre_sum(y) - self._pre_sum(x - 1) if x > 1 else self._pre_sum(y)  # assert 1 <= x <= y <= self.n
         return res
+
+    def bisect_right(self, w):
+        # all value in nums must be non-negative
+        x, k = 0, 1
+        while k * 2 <= self.n:
+            k *= 2
+        while k > 0:
+            if x + k <= self.n and self.t[x + k] <= w:
+                w -= self.t[x + k]
+                x += k
+            k //= 2
+        return x
 
 
 class PointChangeRangeSum:
@@ -139,7 +148,7 @@ class PointAddRangeSum2D:
         return res
 
     def range_sum(self, x1: int, y1: int, x2: int, y2: int) -> int:
-        # index start from 1 and query the sum of matrix sum(s[y1-1:y2] for s in grid[x1-1: x2])  which is 0-index
+        # index start from 1 and query the sum of matrix sum(s[y1:y2+1] for s in grid[x1: x2+1])  which is 1-index
         return self._query(x2, y2) - self._query(x2, y1 - 1) - self._query(x1 - 1, y2) + self._query(x1 - 1, y1 - 1)
 
 
@@ -277,17 +286,13 @@ class PointAscendRangeMax:
     def _lowest_bit(x):
         return x & -x
 
-    @staticmethod
-    def max(a, b):
-        return a if a > b else b
-
     def point_ascend(self, x, k):
         assert 1 <= x <= self.n
         if self.a[x] >= k:
             return
         self.a[x] = k
         while x <= self.n:
-            self.t[x] = self.max(self.t[x], k)
+            self.t[x] = max(self.t[x], k)
             x += self._lowest_bit(x)
         return
 
@@ -296,10 +301,10 @@ class PointAscendRangeMax:
         max_val = self.initial
         while r >= left:
             if r - self._lowest_bit(r) >= left - 1:
-                max_val = self.max(max_val, self.t[r])
+                max_val = max(max_val, self.t[r])
                 r -= self._lowest_bit(r)
             else:
-                max_val = self.max(max_val, self.a[r])
+                max_val = max(max_val, self.a[r])
                 r -= 1
         return max_val
 
@@ -342,17 +347,13 @@ class PointDescendRangeMin:
     def _lowest_bit(x):
         return x & -x
 
-    @staticmethod
-    def min(a, b):
-        return a if a < b else b
-
     def point_descend(self, x, k):
         assert 1 <= x <= self.n
         if self.a[x] <= k:
             return
         self.a[x] = k
         while x <= self.n:
-            self.t[x] = self.min(self.t[x], k)
+            self.t[x] = min(self.t[x], k)
             x += self._lowest_bit(x)
         return
 
@@ -361,10 +362,10 @@ class PointDescendRangeMin:
         min_val = self.initial
         while r >= left:
             if r - self._lowest_bit(r) >= left - 1:
-                min_val = self.min(min_val, self.t[r])
+                min_val = min(min_val, self.t[r])
                 r -= self._lowest_bit(r)
             else:
-                min_val = self.min(min_val, self.a[r])
+                min_val = min(min_val, self.a[r])
                 r -= 1
         return min_val
 
@@ -436,14 +437,6 @@ class PointChangeMaxMin2D:
     def _lowest_bit(x):
         return x & -x
 
-    @staticmethod
-    def max(a, b):
-        return a if a > b else b
-
-    @staticmethod
-    def min(a, b):
-        return a if a < b else b
-
     def add(self, x, y, k):
         # index start from 1
         self.a[x][y] = k
@@ -451,8 +444,8 @@ class PointChangeMaxMin2D:
         while i <= self.m:
             j = y
             while j <= self.n:
-                self.tree_ceil[i][j] = self.max(self.tree_ceil[i][j], k)
-                self.tree_floor[i][j] = self.min(self.tree_floor[i][j], k)
+                self.tree_ceil[i][j] = max(self.tree_ceil[i][j], k)
+                self.tree_floor[i][j] = min(self.tree_floor[i][j], k)
                 j += self._lowest_bit(j)
             i += self._lowest_bit(i)
         return
@@ -468,10 +461,10 @@ class PointChangeMaxMin2D:
                 j1, j2 = y1, y2
                 while j2 >= j1:
                     if j2 - self._lowest_bit(j2) >= j1 - 1:
-                        max_val = self.max(max_val, self.tree_ceil[i2][j2])
+                        max_val = max(max_val, self.tree_ceil[i2][j2])
                         j2 -= self._lowest_bit(j2)
                     else:
-                        max_val = self.max(max_val, self.a[i2][j2])
+                        max_val = max(max_val, self.a[i2][j2])
                         j2 -= 1
                 ##########
 
@@ -482,12 +475,12 @@ class PointChangeMaxMin2D:
                 j1, j2 = y1, y2
                 while j2 >= j1:
                     if j2 - self._lowest_bit(j2) >= j1 - 1:
-                        max_val = self.max(max_val, self.tree_ceil[i2][j2])
+                        max_val = max(max_val, self.tree_ceil[i2][j2])
                         j2 -= self._lowest_bit(j2)
                     else:
-                        max_val = self.max(max_val, self.a[i2][j2])
+                        max_val = max(max_val, self.a[i2][j2])
                         j2 -= 1
                 ##########
-                max_val = self.max(max_val, max(self.a[i2][y1:y2 + 1]))
+                max_val = max(max_val, max(self.a[i2][y1:y2 + 1]))
                 i2 -= 1
         return max_val

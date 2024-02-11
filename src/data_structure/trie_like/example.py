@@ -9,6 +9,7 @@ from src.data_structure.trie_like.template import BinaryTrieXor, StringTriePrefi
 class TestGeneral(unittest.TestCase):
 
     def test_binary_trie(self):
+        random.seed(2024)
         for mi in range(10):
             max_num = 10 ** mi
             num_cnt = 5 * 10 ** 3
@@ -55,7 +56,7 @@ class TestGeneral(unittest.TestCase):
             for i in range(word_cnt):
                 word = "".join(chr(ord("a") + random.randint(0, 25)) for _ in range(random.randint(1, word_length)))
                 words.append(word)
-                trie.add(word)
+                trie.add([ord(w) - ord("a") for w in word])
             for i in range(word_cnt):
                 word = "".join(chr(ord("a") + random.randint(0, 25)) for _ in range(random.randint(1, word_length)))
                 res = 0
@@ -65,7 +66,7 @@ class TestGeneral(unittest.TestCase):
                             res += 1
                         else:
                             break
-                assert res == trie.count(word)
+                assert res == trie.count([ord(w) - ord("a") for w in word])
         return
 
     def test_solution_lc_421_1(self):  # 411 ms

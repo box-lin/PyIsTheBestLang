@@ -14,6 +14,8 @@ Description：range_add|range_sum
 2407（https://leetcode.cn/problems/longest-increasing-subsequence-ii/description/）tree_array|liner_dp
 2926（https://leetcode.cn/problems/maximum-balanced-subsequence-sum/）discretization|tree_array|liner_dp
 2736（https://leetcode.cn/problems/maximum-sum-queries/）PointAddPreMax
+2916（https://leetcode.cn/problems/subarrays-distinct-element-sum-of-squares-ii/）range_add|range_sum|contribution_method|linear_dp
+
 
 =====================================LuoGu======================================
 P2068（https://www.luogu.com.cn/problem/P2068）PointAddRangeSum
@@ -37,20 +39,23 @@ P1972（https://www.luogu.com.cn/problem/P1972）tree_array|offline_query|range_
 ====================================AtCoder=====================================
 ABC103D（https://atcoder.jp/contests/abc103/tasks/abc103_d）greedy|tree_array
 ABC127F（https://atcoder.jp/contests/abc127/tasks/abc127_f）discretization|tree_array|counter
-
+ABC287G（https://atcoder.jp/contests/abc287/tasks/abc287_g）segment_tree|range_sum|dynamic|offline|tree_array|bisect_right
 
 ===================================CodeForces===================================
-1791F（https://codeforces.com/problemset/problem/1791/F）tree_array
+1791F（https://codeforces.com/problemset/problem/1791/F）tree_array|data_range|union_find_right|limited_operation
 1676H2（https://codeforces.com/contest/1676/problem/H2）tree_array|pre_sum
 987C（https://codeforces.com/problemset/problem/987/C）brute_force|tree_array|prefix_suffix|pre_min
 1311F（https://codeforces.com/contest/1311/problem/F）discretization|tree_array|counter
 1860C（https://codeforces.com/contest/1860/problem/C）PointDescendRangeMin
 1550C（https://codeforces.com/contest/1550/problem/C）PointAscendPreMax
 1679C（https://codeforces.com/contest/1679/problem/C）PointAddRangeSum
+1722E（https://codeforces.com/problemset/problem/1722/E）data_range|matrix_prefix_sum|classical|can_be_discretization_hard_version|tree_array_2d
 
+=====================================LibraryChecker=====================================
 1（https://judge.yosupo.jp/problem/vertex_add_subtree_sum）tree_array|dfs_order
 135. tree_matrix|3（https://loj.ac/p/135）range_change|range_sum
 134. tree_matrix|2（https://loj.ac/p/134）range_change|range_sum
+4（https://codeforces.com/edu/course/2/lesson/4/3/practice/contest/274545/problem/A）tree_array|point_set|range_sum|inversion
 
 """
 from collections import defaultdict, deque
@@ -915,6 +920,7 @@ class Solution:
         url: https://leetcode.com/problems/range-sum-query-mutable
         tag: PointChangeRangeSum
         """
+
         class NumArray:
 
             def __init__(self, nums: List[int]):
@@ -936,6 +942,7 @@ class Solution:
         url: https://leetcode.com/problems/range-sum-query-2d-mutable/
         tag: tree_matrix|RangeAddRangeSum
         """
+
         class NumMatrix:
             def __init__(self, matrix: List[List[int]]):
                 m, n = len(matrix), len(matrix[0])
@@ -953,3 +960,128 @@ class Solution:
                 return self.tree.range_sum(row1 + 1, col1 + 1, row2 + 1, col2 + 1)
 
         return NumMatrix
+
+    @staticmethod
+    def library_check_4(ac=FastIO()):
+        """
+        url: https://codeforces.com/edu/course/2/lesson/4/3/practice/contest/274545/problem/A
+        tag: segment_tree|point_set|range_sum|inversion
+        """
+        n = ac.read_int()
+        tree = PointAddRangeSum(n, 0)
+        nums = ac.read_list_ints()
+        ans = [0] * n
+        for j in range(n):
+            i = n + 1 - nums[j]
+            ans[j] = tree.range_sum(1, i)
+            tree.point_add(i, 1)
+        ac.lst(ans)
+        return
+
+    @staticmethod
+    def abc_287g(ac=FastIO()):
+        """
+        url: https://atcoder.jp/contests/abc287/tasks/abc287_g
+        tag: segment_tree|range_sum|dynamic|offline|tree_array|bisect_right
+        """
+        n = ac.read_int()
+        nums = [ac.read_list_ints() for _ in range(n)]
+        q = ac.read_int()
+        queries = [ac.read_list_ints() for _ in range(q)]
+        nodes = set()
+        for a, _ in nums:
+            nodes.add(a)
+        for lst in queries:
+            if lst[0] == 1:
+                nodes.add(lst[2])
+        nodes = sorted(nodes)
+        ind = {num: i + 1 for i, num in enumerate(nodes)}
+        n = len(nodes)
+        tree1 = PointAddRangeSum(n)
+        tree2 = PointAddRangeSum(n)
+        tot1 = tot2 = 0
+        for a, b in nums:
+            tree1.point_add(ind[a], b)
+            tree2.point_add(ind[a], a * b)
+            tot1 += b
+            tot2 += a * b
+
+        for lst in queries:
+            if lst[0] < 3:
+                x, y = lst[1:]
+                x -= 1
+                a, b = nums[x]
+                tree1.point_add(ind[a], -b)
+                tree2.point_add(ind[a], -a * b)
+                tot1 -= b
+                tot2 -= a * b
+                if lst[0] == 1:
+                    nums[x][0] = y
+                else:
+                    nums[x][1] = y
+                a, b = nums[x]
+                tree1.point_add(ind[a], b)
+                tree2.point_add(ind[a], a * b)
+                tot1 += b
+                tot2 += a * b
+            else:
+                x = lst[1]
+                if tot1 < x:
+                    ac.st(-1)
+                    continue
+                i = tree1.bisect_right(tot1 - x)
+                ans = tree2.range_sum(1, i) if i else 0
+                rest = tot1 - x - tree1.range_sum(1, i) if i else tot1 - x
+                ans += rest * nodes[i]
+                ac.st(tot2 - ans)
+        return
+
+    @staticmethod
+    def lc_2916(nums: List[int]) -> int:
+        """
+        url: https://leetcode.cn/problems/subarrays-distinct-element-sum-of-squares-ii/
+        tag: range_add|range_sum|contribution_method|linear_dp
+
+        """
+        n = len(nums)
+        mod = 10 ** 9 + 7
+        ans = dp = 0
+        dct = dict()
+        tree = RangeAddRangeSum(n)
+        for i in range(n):
+            num = nums[i]
+            if num not in dct:
+                dp += 2 * tree.range_sum(1, i + 1) + i + 1
+                tree.range_add(1, i + 1, 1)
+
+            else:
+                j = dct[num]
+                dp += 2 * tree.range_sum(j + 2, i + 1) + i - j
+                tree.range_add(j + 2, i + 1, 1)
+            ans += dp
+            dct[num] = i
+            ans %= mod
+            dp %= mod
+        return ans
+
+    @staticmethod
+    def cf_1722e(ac=FastIO()):
+        """
+        url: https://codeforces.com/problemset/problem/1722/E
+        tag: data_range|matrix_prefix_sum|classical|can_be_discretization_hard_version|tree_array_2d
+        """
+
+        for _ in range(ac.read_int()):
+            k, q = ac.read_list_ints()
+            rec = [ac.read_list_ints() for _ in range(k)]
+            qur = [ac.read_list_ints() for _ in range(q)]
+            n = max([y for _, y in rec] + [ls[3] for ls in qur])
+            m = max([y for y, _ in rec] + [ls[2] for ls in qur])
+            tree_2d = PointAddRangeSum2D(m, n)
+            for x, y in rec:
+                tree_2d.point_add(x, y, x * y)
+
+            for hs, ws, hb, wb in qur:
+                ans = tree_2d.range_sum(hs + 1, ws + 1, hb - 1, wb - 1)
+                ac.st(ans)
+        return

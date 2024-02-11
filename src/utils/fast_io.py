@@ -17,14 +17,6 @@ class Wrapper(int):
         return super(Wrapper, self).__hash__() ^ RANDOM
 
 
-def ac_max(a, b):
-    return a if a > b else b
-
-
-def ac_min(a, b):
-    return a if a < b else b
-
-
 class FastIO:
     def __init__(self):
         self.random_seed = 0
@@ -77,12 +69,12 @@ class FastIO:
         return dct
 
     @staticmethod
-    def st(x):
-        return print(x)
+    def st(x, flush=False):
+        return print(x, flush=flush)
 
     @staticmethod
-    def lst(x):
-        return print(*x)
+    def lst(x, flush=False):
+        return print(*x, flush=flush)
 
     @staticmethod
     def round_5(f):

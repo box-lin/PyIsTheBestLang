@@ -54,9 +54,12 @@ P8094（https://www.luogu.com.cn/problem/P8094）monotonic_stack|pre_larger|post
 1795E（https://codeforces.com/problemset/problem/1795/E）monotonic_stack|liner_dp|greedy|counter|brute_force|prefix_suffix|dp
 1313C2（https://codeforces.com/problemset/problem/1313/C2）monotonic_stack|liner_dp
 1454F（https://codeforces.com/contest/1454/problem/F）monotonic_stack|brute_force
+1092D2（https://codeforces.com/contest/1092/problem/D2）monotonic_stack|implemention
+1092D1（https://codeforces.com/contest/1092/problem/D1）brain_teaser|greedy|implemention
 
 ====================================AtCoder=====================================
 ABC140E（https://atcoder.jp/contests/abc140/tasks/abc140_e）monotonic_stack|pre_pre_larger|post_post_larger
+ABC336D（https://atcoder.jp/contests/abc336/tasks/abc336_d）monotonic_stack|linear_dp
 
 =====================================AcWing=====================================
 131（https://www.acwing.com/problem/content/133/）monotonic_stack|sub_matrix
@@ -70,7 +73,7 @@ from collections import defaultdict, Counter
 from typing import List
 
 from src.data_structure.monotonic_stack.template import Rectangle
-from src.data_structure.sparse_table.template import SparseTable1
+from src.data_structure.sparse_table.template import SparseTable
 from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
@@ -520,7 +523,7 @@ class Solution:
                 post[stack.pop()] = i - 1
             stack.append(i)
             dct[nums[i]].append(i)
-        st = SparseTable1(nums)
+        st = SparseTable(nums)
         ans = 0
         for i in range(n):
             x = st.query(i + 1, post[i] + 1)
@@ -893,3 +896,33 @@ class Solution:
             stack.append(heights[i])
             ans[i] = cur
         return ans
+
+    @staticmethod
+    def abc_336d(ac=FastIO()):
+        """
+        url: https://atcoder.jp/contests/abc336/tasks/abc336_d
+        tag: monotonic_stack|linear_dp
+        """
+        def check():
+            res = [0] * n
+            stack = []
+            for i in range(n):
+                while stack and nums[stack[-1]] - stack[-1] >= nums[i] - i:
+                    stack.pop()
+                if not stack:
+                    k = ac.min(i + 1, nums[i])
+                    res[i] = k
+                else:
+                    k = res[stack[-1]] + i - stack[-1]
+                    res[i] = k
+                stack.append(i)
+            return res
+
+        n = ac.read_int()
+        nums = ac.read_list_ints()
+        pre = check()
+        nums.reverse()
+        post = check()
+        ans = max(min(pre[i], post[n - 1 - i]) for i in range(n))
+        ac.st(ans)
+        return

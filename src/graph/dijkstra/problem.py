@@ -95,6 +95,8 @@ P2176（https://www.luogu.com.cn/problem/P2176）brute_force|shortest_path
 715B（https://codeforces.com/contest/715/problem/B）several_dijkstra|shortest_path|greedy|dynamic_graph
 1433G（https://codeforces.com/contest/1433/problem/G）several_source_dijkstra|shortest_path|brute_force
 1650G（https://codeforces.com/contest/1650/problem/G）dijkstra|shortest_path|strictly_second_shortest_path|counter|zero_one_bfs
+1915G（https://codeforces.com/contest/1915/problem/G）shortest_path|limited_shortest_path|dijkstra
+1196F（https://codeforces.com/contest/1196/problem/F）shortest_path|data_range|kth_shortest|brute_force|data_range
 
 ====================================AtCoder=====================================
 ABC142F（https://atcoder.jp/contests/abc142/tasks/abc142_f）directed|directed_smallest_circle
@@ -102,7 +104,7 @@ ABC142F（https://atcoder.jp/contests/abc142/tasks/abc142_f）directed|directed_
 =====================================AcWing=====================================
 176（https://www.acwing.com/problem/content/178/）dijkstra|implemention
 3628（https://www.acwing.com/problem/content/3631/）shortest_path_spanning_tree
-3772（https://www.acwing.com/problem/content/description/3775/）build_graph|reverse_grpah|dijkstra|shortest_path|counter|greedy|implemention
+3772（https://www.acwing.com/problem/content/description/3775/）build_graph|reverse_graph|dijkstra|shortest_path|counter|greedy|implemention
 3797（https://www.acwing.com/problem/content/description/3800/）shortest_path|brute_force|sort|greedy
 4196（https://www.acwing.com/problem/content/4199/）shortest_path
 
@@ -1935,4 +1937,38 @@ class Solution:
         else:
             path.reverse()
             ac.lst([x + 1 for x in path])
+        return
+
+    @staticmethod
+    def cf_1915g(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1915/problem/G
+        tag: shortest_path|limited_shortest_path|dijkstra
+        """
+        for _ in range(ac.read_int()):
+            n, m = ac.read_list_ints()
+            dct = [[] for _ in range(n)]
+            nums = [ac.read_list_ints() for _ in range(m)]
+            s = ac.read_list_ints()
+            for u, v, w in nums:
+                dct[u - 1].append([v - 1, w])
+                dct[v - 1].append([u - 1, w])
+
+            n = len(dct)
+            stack = [(0, 0, s[0])]
+            vis = [inf] * n
+
+            while stack:
+                d, i, k = heappop(stack)
+                if i == n - 1:
+                    ac.st(d)
+                    break
+                if vis[i] <= k:
+                    continue
+                vis[i] = k
+                ss = ac.min(k, s[i])
+                for j, w in dct[i]:
+                    dj = d + ss * w
+                    if ss < vis[j]:
+                        heappush(stack, (dj, j, ss))
         return

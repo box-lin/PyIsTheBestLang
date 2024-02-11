@@ -19,7 +19,7 @@ P5462（https://www.luogu.com.cn/problem/P5462）double_linked_list|greedy|lexic
 P6155（https://www.luogu.com.cn/problem/P6155）sort|greedy|union_find_right_root
 
 ===================================CodeForces===================================
-1154E（https://codeforces.com/contest/1154/problem/E）double_linked_list
+1154E（https://codeforces.com/contest/1154/problem/E）double_linked_list|union_find_left|union_find_right
 
 =====================================AcWing=====================================
 136（https://www.acwing.com/problem/content/138/）linked_list|reverse_thinking
@@ -31,7 +31,7 @@ import heapq
 from collections import deque
 from typing import List
 
-from src.graph.union_find.template import UnionFindLeftRoot, UnionFindRightRoot
+from src.graph.union_find.template import UnionFind
 from src.utils.fast_io import FastIO
 from src.utils.fast_io import inf
 
@@ -113,7 +113,7 @@ class Solution:
         tag: double_linked_list|union_find_root_left
         """
         n, k = ac.read_list_ints()
-        uf = UnionFindLeftRoot(n + 1)
+        uf = UnionFind(n + 1)
         for _ in range(k):
             op, x = ac.read_list_ints()
             if op == 1:
@@ -202,8 +202,8 @@ class Solution:
         """
         m, n = len(grid), len(grid[0])
         dis = [[inf] * n for _ in range(m)]
-        row = [UnionFindRightRoot(n + 1) for _ in range(m)]
-        col = [UnionFindRightRoot(m + 1) for _ in range(n)]
+        row = [UnionFind(n + 1) for _ in range(m)]
+        col = [UnionFind(m + 1) for _ in range(n)]
         stack = deque([[0, 0]])
         dis[0][0] = 1
 

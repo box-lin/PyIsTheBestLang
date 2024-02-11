@@ -57,12 +57,12 @@ class FastIO:
         return
 
     @staticmethod
-    def st(x):
-        return print(x)
+    def st(x, flush=False):
+        return print(x, flush=flush)
 
     @staticmethod
-    def lst(x):
-        return print(*x)
+    def lst(x, flush=False):
+        return print(*x, flush=flush)
 
     @staticmethod
     def max(a, b):
@@ -91,7 +91,10 @@ class Solution:
 
     @staticmethod
     def main(ac=FastIO()):
-
+        """
+        url: https://codeforces.com/problemset/problem/1208/D
+        tag: segment_tree|reverse_thinking|construction|point_set|range_sum_bisect_left
+        """
         for _ in range(ac.read_int()):
             pass
         return

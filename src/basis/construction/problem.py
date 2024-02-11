@@ -23,6 +23,8 @@ P8880（https://www.luogu.com.cn/problem/P8880）brain_teaser|construction|odd_e
 
 ===================================CodeForces===================================
 1396A（https://codeforces.com/problemset/problem/1396/A）greedy|construction
+1133F2（https://codeforces.com/contest/1133/problem/F2）mst|construction|union_find
+1118C（https://codeforces.com/contest/1118/problem/C）construction|matrix_rotate|implemention
 1118E（https://codeforces.com/problemset/problem/1118/E）implemention|greedy|construction
 960C（https://codeforces.com/problemset/problem/960/C）greedy|construction
 1793B（https://codeforces.com/contest/1793/problem/B）brain_teaser|greedy|construction
@@ -30,15 +32,33 @@ P8880（https://www.luogu.com.cn/problem/P8880）brain_teaser|construction|odd_e
 1348D（https://codeforces.com/problemset/problem/1348/D）bin|construction
 1554D（https://codeforces.com/problemset/problem/1554/D）construction|floor
 1788C（https://codeforces.com/problemset/problem/1788/C）construction
-1367D（https://codeforces.com/problemset/problem/1367/D）reverse_thinking|implemention|construction
+1367D（https://codeforces.com/problemset/problem/1367/D）reverse_thinking|implemention|construction|classical
 1485D（https://codeforces.com/problemset/problem/1485/D）data_range|construction
-1722G（https://codeforces.com/problemset/problem/1722/G）odd_even|xor|construction
+1722G（https://codeforces.com/problemset/problem/1722/G）odd_even|xor_property|construction
 1822D（https://codeforces.com/contest/1822/problem/D）construction|prefix_sum|mod|permutation
 1509D（https://codeforces.com/contest/1509/problem/D）lcs|shortest_common_hypersequence|construction|data_range|O(n)|pigeonhole_principle
 1473C（https://codeforces.com/contest/1473/problem/C）brain_teaser|s1s2..sn..s2s1
 1469D（https://codeforces.com/contest/1469/problem/D）square|ceil|greedy|implemention
 1478B（https://codeforces.com/contest/1478/problem/B）brute_force|bag_dp|construction
 1682B（https://codeforces.com/contest/1682/problem/B）bitwise_and|construction|permutation_circle
+1823D（https://codeforces.com/contest/1823/problem/D）greedy|construction|palindrome
+1352G（https://codeforces.com/contest/1352/problem/G）construction|odd_even
+1352F（https://codeforces.com/contest/1352/problem/G）construction
+1003E（https://codeforces.com/contest/1003/problem/E）construction|tree_diameter|classical
+1005F（https://codeforces.com/contest/1005/problem/F）construction|shortest_path_spanning_tree|classical|dfs|specific_plan
+1092E（https://codeforces.com/contest/1092/problem/E）construction|tree_diameter|classical|greedy
+1141G（https://codeforces.com/problemset/problem/1141/G）construction|dfs|color_method|greedy|classical
+1144F（https://codeforces.com/contest/1144/problem/F）construction|color_method|classical|bipartite
+1157E（https://codeforces.com/contest/1157/problem/E）construction|greedy|sorted_list
+1157D（https://codeforces.com/contest/1157/problem/D）construction|greedy
+1196E（https://codeforces.com/contest/1196/problem/E）construction|greedy
+1213E（https://codeforces.com/contest/1213/problem/E）construction|brute_force
+1294F（https://codeforces.com/contest/1294/problem/F）classical|tree_diameter|construction
+1311E（https://codeforces.com/contest/1311/problem/E）construction|2-tree
+1343F（https://codeforces.com/contest/1343/problem/F）construction|data_range|brain_teaser
+1360G（https://codeforces.com/contest/1360/problem/G）construction
+1385E（https://codeforces.com/contest/1385/problem/E）construction|topological_sort|classical|undirected|directed
+
 
 ====================================AtCoder=====================================
 AGC007B（https://atcoder.jp/contests/agc007/tasks/agc007_b）brain_teaser|math|construction
@@ -52,8 +72,8 @@ import math
 from collections import deque, Counter, defaultdict
 from typing import List
 
-from src.mathmatics.number_theory.template import NumberTheory
-from src.utils.fast_io import FastIO
+from src.mathmatics.number_theory.template import NumFactor
+from src.utils.fast_io import FastIO, inf
 
 
 class Solution:
@@ -217,7 +237,7 @@ class Solution:
         """
         n, k = ac.read_list_ints()
         ans = []
-        for p, c in NumberTheory().get_prime_factor(n):
+        for p, c in NumFactor().get_prime_factor(n):
             ans.extend([p] * c)
         if sum(ans) > k:
             ac.st(-1)
@@ -349,4 +369,149 @@ class Solution:
             b[ind[x]] = j
         ac.lst(a)
         ac.lst(b)
+        return
+
+    @staticmethod
+    def cf_1823d(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1823/problem/D
+        tag: greedy|construction|palindrome
+        """
+        for _ in range(ac.read_int()):
+            n, k = ac.read_list_ints()
+            x = [0] + [x - 3 for x in ac.read_list_ints()]
+            c = [0] + [x - 3 for x in ac.read_list_ints()]
+            st = "abc"
+            ans = ["abc"]
+            ind = 0
+            for i in range(k):
+                dx = x[i + 1] - x[i]
+                dc = c[i + 1] - c[i]
+                if dx < dc:
+                    ac.st("NO")
+                    break
+                ans.append(chr(ord("d") + i) * dc)
+                for _ in range(dx - dc):
+                    ans.append(st[ind])
+                    ind += 1
+                    ind %= 3
+            else:
+                ac.st("YES")
+                ac.st("".join(ans))
+        return
+
+    @staticmethod
+    def cf_1722g(ac=FastIO()):
+        """
+        url: https://codeforces.com/problemset/problem/1722/G
+        tag: odd_even|xor_property|construction
+        """
+
+        # def sum_xor(n):
+        #     """xor num of range(0, x+1)"""
+        #     if n % 4 == 0:
+        #         return n  # (4*i)^(4*i+1)^(4*i+2)^(4*i+3)=0
+        #     elif n % 4 == 1:
+        #         return 1  # n^(n-1)
+        #     elif n % 4 == 2:
+        #         return n + 1  # n^(n-1)^(n-2)
+        #     return 0  # n^(n-1)^(n-2)^(n-3)
+
+        for _ in range(ac.read_int()):
+            n = ac.read_int()  # n >= 3
+            if n % 4 == 0:
+                ans = list(range(n))
+            elif n % 4 == 1:
+                ans = [0] + list(range(2, n + 1))
+            elif n % 4 == 2:
+                ans = list(range(1, n - 1)) + [1 << 20, (1 << 20) | (n - 2)]
+            else:
+                ans = list(range(1, n + 1))
+            ac.lst(ans)
+        return
+
+    @staticmethod
+    def cf_1005f(ac=FastIO()):
+        """
+        url: https://codeforces.com/contest/1005/problem/F
+        tag: construction|shortest_path_spanning_tree|classical|dfs|specific_plan
+        """
+        n, m, k = ac.read_list_ints()
+        edges = [[] for _ in range(n)]
+        for i in range(m):
+            x, y = ac.read_list_ints_minus_one()
+            edges[x].append((y, i))
+            edges[y].append((x, i))
+        stack = deque([0])
+        choose = [0] * m
+        visit = [inf] * n
+        visit[0] = 1
+        while stack:
+            x = stack.popleft()
+            for y, i in edges[x]:
+                if visit[y] == inf:
+                    choose[i] = 1
+                    stack.append(y)
+                    visit[y] = visit[x] + 1
+        edges = [[i for y, i in edges[x] if visit[y] + 1 == visit[x]] for x in range(n)]
+        del visit
+        del choose
+
+        ans = []
+        use = [0] * n
+        for _ in range(k):
+            res = ["0"] * m
+            for i in range(1, n):
+                res[edges[i][use[i]]] = "1"
+            ans.append("".join(res))
+            for i in range(1, n):
+                if use[i] + 1 < len(edges[i]):
+                    use[i] += 1
+                    break
+                else:
+                    use[i] = 0
+            else:
+                break
+        ac.st(len(ans))
+        ac.st("\n".join(ans))
+        return
+
+    @staticmethod
+    def cf_1141g(ac=FastIO()):
+        """
+        url: https://codeforces.com/problemset/problem/1141/G
+        tag: construction|dfs|color_method|greedy|classical
+        """
+        n, k = ac.read_list_ints()
+        edges = [[] for _ in range(n)]
+
+        for i in range(n - 1):
+            x, y = ac.read_list_ints_minus_one()
+            edges[x].append((y, i))
+            edges[y].append((x, i))
+
+        if k == n:
+            ac.st(1)
+            ac.lst([1] * (n - 1))
+            return
+        degree = [len(x) for x in edges]
+        color = sorted(degree, reverse=True)[k]
+        ans = [-1] * (n - 1)
+        stack = [(0, -1, -1)]
+        while stack:
+            x, fa, c = stack.pop()
+            cur = 1
+            for y, i in edges[x]:
+                if y != fa:
+                    if cur == c:
+                        cur += 1
+                    if cur > color:
+                        cur = 1
+                    ans[i] = cur
+                    stack.append((y, x, cur))
+                    cur += 1
+                    if cur > color:
+                        cur = 1
+        ac.st(color)
+        ac.lst(ans)
         return
